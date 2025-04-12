@@ -1,0 +1,59 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node modules and build output
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment and configuration files
+.env
+.env.local
+.env.*.local
+*.env
+!.env.example
+
+# Build output directories (Vite)
+.vite
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Dependency directories
+npm/
+yarn/
+pnpm/
+
+# Miscellaneous files
+*.tgz
+
+# Optional npm cache directory
+.npm
+
+# TypeScript declaration files
+*.d.ts
+
+# Coverage reports
+coverage/
+
+# System generated files
+*.bak
+*.swp
