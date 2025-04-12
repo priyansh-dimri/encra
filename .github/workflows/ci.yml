@@ -32,5 +32,5 @@ jobs:
       - name: Install & test frontend
         working-directory: ./encra-client
         run: |
-          npm ci
+          npm install
           npm run test
