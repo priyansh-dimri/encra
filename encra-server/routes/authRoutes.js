@@ -1,12 +1,22 @@
 const express = require("express");
 const authController = require("../controllers/authController");
-const { checkAuth } = require("../middlewares/authMiddleware");
+const authLimiter = require("../middlewares/rateLimiter");
+const { validateRegister } = require("../middlewares/authMiddleware");
+const csrfProtection = require("../middlewares/csrfProtection");
 
 const router = express.Router();
 
-router.post("/register", authController.register);
-router.post("/login", authController.login);
-router.post("/logout", checkAuth, authController.logout);
-router.post("/refresh", authController.refreshToken);
+router.post(
+  "/register",
+  validateRegister,
+  authLimiter,
+  authController.register
+);
+router.post("/login", authLimiter, authController.login);
+router.post("/logout", csrfProtection, checkAuth, authController.logout);
+router.post("/refresh", csrfProtection, authLimiter, authController.refreshToken);
+router.get("/csrf-token", csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 module.exports = router;
