@@ -2,7 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
-const authRouter = require("./routes/auth");
+const authRouter = require("./routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +13,11 @@ app.use(cors());
 
 // Routes
 app.use("/auth", authRouter);
+
+// Health Checking route
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy" });
+});
 
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {

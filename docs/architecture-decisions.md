@@ -17,4 +17,14 @@
 - Decision: Message deletion is global so delete = delete for both
 - Reason: Keep logic simple and align with privacy-first UX
 
+### 13-04-2025 — Stateless JWT based Authentication Token with Cookie based Refresh Token
+
+- Decision: Stateless Access Token is stored in front end memory and Refresh Token is stored in front end cookie
+- Reason: Automatic token rotation and protection from XSS of Access Token
+
+### 13-04-2025 — CSRF Protection using csurf
+
+- Decision: Add CSRF Protection for end points which change state of the system like POST. So, CSRF is provided using /auth/csrf-token route
+- Reason: Protections against CSRF
+
 ## Client (encra-client)

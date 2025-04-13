@@ -1,10 +1,10 @@
 const request = require("supertest");
 const app = require("../server");
 
-describe("GET /", () => {
-  it("responds with status ok", async () => {
-    const res = await request(app).get("/");
+describe("GET /health", () => {
+  it("responds with healthy status", async () => {
+    const res = await request(app).get("/health");
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ status: "ok" });
+    expect(res.body).toEqual({ status: "healthy" });
   });
 });
