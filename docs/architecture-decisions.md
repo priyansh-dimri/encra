@@ -27,4 +27,9 @@
 - Decision: Add CSRF Protection for end points which change state of the system like POST. So, CSRF is provided using /auth/csrf-token route
 - Reason: Protections against CSRF
 
+### 14-04-2025 — Password Hashing Migration from bcrypt to Argon2
+
+- Decision: Migrate from using bcrypt to argon2 for password hashing
+- Reason: Argon2 is more modern and provides maximum protection as compared to bcrypt
+
 ## Client (encra-client)

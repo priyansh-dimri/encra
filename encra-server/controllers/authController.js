@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const RefreshToken = require("../models/RefreshToken");
-const bcrypt = require("bcryptjs");
+const argon2 = require("argon2");
 const logger = require("../utils/logger");
 const {
   generateAccessToken,
@@ -17,11 +17,12 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const saltRounds = process.env.BCRYPT_SALT_ROUNDS
-      ? parseInt(process.env.BCRYPT_SALT_ROUNDS)
-      : 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
+    const options = {
+      timeCost: 4,
+      memoryCost: 2 ** 16,
+      parallelism: 1,
+    };
+    const hashedPassword = await argon2.hash(password, options);
     const newUser = new User({
       username,
       email,
@@ -65,7 +66,7 @@ exports.login = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: "User not found" });
 
-    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    const isMatch = await argon2.verify(user.passwordHash, password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
 

@@ -37,6 +37,7 @@
   - **Socket.IO Server** — for real-time, low-latency communication.
   - **MongoDB** with **Mongoose** — scalable, NoSQL database for handling user data.
   - **JSON Web Tokens (JWT)** — secure, stateless session management.
+  - **Argon2** — state-of-the-art password hashing algorithm for secure authentication.
   - **@noble/post-quantum** — advanced cryptographic algorithms for post-quantum security.
   - _dotenv, cors_ — for environment configuration and cross-origin resource sharing.
 
@@ -47,7 +48,7 @@
 1. **User Authentication & Authorization:**
 
    - Registration, login, and logout managed through **JWT** for stateless authentication..
-   - Secure password hashing with modern algorithms, ensuring data protection..
+   - Secure password hashing using **Argon2** ensuring protection against modern threats.
 
 2. **Post-Quantum Key Exchange & Encryption:**
 
