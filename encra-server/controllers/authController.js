@@ -48,8 +48,8 @@ exports.register = async (req, res) => {
     res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV !== "test",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(201)
@@ -93,8 +93,8 @@ exports.login = async (req, res) => {
     res
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV !== "test",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)
@@ -106,7 +106,7 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  const { refreshToken } = req.body;
+  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken)
     return res.status(400).json({ message: "No Refresh Token provided." });
@@ -116,8 +116,8 @@ exports.logout = async (req, res) => {
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      secure: process.env.NODE_ENV !== "test",
+      sameSite: "none",
     });
 
     logger.info("User logged out successfully.");
@@ -161,8 +161,8 @@ exports.refreshToken = async (req, res) => {
     res
       .cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV !== "test",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)

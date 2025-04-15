@@ -14,7 +14,12 @@ router.post(
 );
 router.post("/login", authLimiter, authController.login);
 router.post("/logout", csrfProtection, authController.logout);
-router.post("/refresh", csrfProtection, authLimiter, authController.refreshToken);
+router.post(
+  "/refresh",
+  csrfProtection,
+  authLimiter,
+  authController.refreshToken
+);
 router.get("/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
