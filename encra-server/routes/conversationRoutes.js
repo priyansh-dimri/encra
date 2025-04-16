@@ -1,6 +1,6 @@
 const express = require("express");
 const conversationController = require("../controllers/conversationController");
-const { verifyAccessToken } = require("../utils/authUtils"); // Ensure only authenticated users can access these
+const { verifyAccessToken } = require("../utils/authUtils");
 
 const router = express.Router();
 
