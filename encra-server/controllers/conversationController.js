@@ -1,4 +1,3 @@
-// controllers/conversationController.js
 const Conversation = require("../models/ChatRoom");
 const logger = require("../utils/logger");
 

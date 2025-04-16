@@ -3,10 +3,9 @@ const messageController = require("../controllers/messageController");
 const { verifyAccessToken } = require("../utils/authUtils");
 const attachConversation = require("../middlewares/attachConversation");
 const checkUserInConversation = require("../middlewares/checkUserInConversation");
+const { validateSendMessage } = require("../middlewares/validateSendMessage");
 
 const router = express.Router();
-
-// TODO: add validation middlewares
 
 router.get(
   "/:conversationId",
@@ -21,6 +20,7 @@ router.post(
   verifyAccessToken,
   attachConversation("body"),
   checkUserInConversation,
+  validateSendMessage,
   messageController.sendMessage
 );
 
