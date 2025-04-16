@@ -17,6 +17,14 @@ const chatRoomSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// This Sort the participants for ensuring proper ordering
+chatRoomSchema.pre("save", function (next) {
+  if (this.participants) {
+    this.participants.sort();
+  }
+  next();
+});
+
 // Indexing the participants for quick lookups
 chatRoomSchema.index({ participants: 1 });
 

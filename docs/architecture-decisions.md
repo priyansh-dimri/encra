@@ -32,4 +32,9 @@
 - Decision: Migrate from using bcrypt to argon2 for password hashing
 - Reason: Argon2 is more modern and provides maximum protection as compared to bcrypt
 
+### 16-04-2025 — Proper Participants ordering in ChatRoom.js Model
+
+- Decision: Add a hook to sort the participants
+- Reason: Improves query performance and avoid duplication of a chat
+
 ## Client (encra-client)
