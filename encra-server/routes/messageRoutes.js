@@ -3,7 +3,6 @@ const messageController = require("../controllers/messageController");
 const { verifyAccessToken } = require("../utils/authUtils");
 const attachConversation = require("../middlewares/attachConversation");
 const checkUserInConversation = require("../middlewares/checkUserInConversation");
-const { validateSendMessage } = require("../middlewares/validateSendMessage");
 
 const router = express.Router();
 
@@ -13,6 +12,14 @@ router.get(
   attachConversation("params"),
   checkUserInConversation,
   messageController.getMessages
+);
+
+router.delete(
+  "/:messageId",
+  verifyAccessToken,
+  attachConversation("body"),
+  checkUserInConversation,
+  messageController.deleteMessage
 );
 
 module.exports = router;

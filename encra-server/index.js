@@ -2,7 +2,7 @@ const app = require("./server");
 const http = require("http");
 const connectDB = require("./config/db");
 const PORT = process.env.PORT || 3000;
-const initSocketServer = require("./socket");
+const { initSocketServer } = require("./socket");
 
 connectDB();
 

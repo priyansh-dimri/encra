@@ -1,5 +1,6 @@
 const Message = require("../models/Message");
 const logger = require("../utils/logger");
+const { getIO } = require("../socket");
 
 exports.getMessages = async (req, res) => {
   try {
@@ -31,6 +32,38 @@ exports.getMessages = async (req, res) => {
     logger.error(
       `Error fetching messages for conversationId: ${req.conversation._id} - ${error}`
     );
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.deleteMessage = async (req, res) => {
+  try {
+    const messageId = req.params.messageId;
+    const conversationId = req.conversation._id;
+
+    const message = await Message.findOne({
+      _id: messageId,
+      chat: conversationId,
+    });
+
+    if (!message) {
+      logger.warn(
+        `Message ${messageId} not found in conversation ${conversationId}`
+      );
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    await message.deleteOne();
+
+    logger.info(
+      `Message ${messageId} deleted from conversation ${conversationId}`
+    );
+
+    getIO().to(conversationId).emit("message:delete", { messageId });
+
+    res.status(200).json({ message: "Message deleted successfully" });
+  } catch (error) {
+    logger.error(`Error deleting message: ${error}`);
     res.status(500).json({ message: "Server Error" });
   }
 };

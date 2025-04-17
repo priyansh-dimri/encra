@@ -6,6 +6,8 @@ const sendMsg = require("./handlers/sendMessage");
 const onDisconnect = require("./handlers/disconnect");
 const rateLimiter = require("./middlewares/socketRateLimiter");
 
+let ioInstance = null;
+
 function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
@@ -25,7 +27,15 @@ function initSocketServer(httpServer) {
     onDisconnect(socket);
   });
 
+  ioInstance = io;
   return io;
 }
 
-module.exports = initSocketServer;
+function getIO() {
+  if (!ioInstance) {
+    throw new Error("Socket.io instance not initialized yet");
+  }
+  return ioInstance;
+}
+
+module.exports = { initSocketServer, getIO };
