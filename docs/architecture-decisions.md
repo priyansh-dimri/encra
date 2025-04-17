@@ -47,9 +47,14 @@
 - Decision: Using `rate-limiter-flexible` module to at most allow 10 events per 5 seconds per user.
 - Reason: This prevents spamming by any user
 
-### 17-04-2025 — Hybrid Message Deletion: REST + Socket.IO
+### 17-04-2025 — Hybrid Message and Conversation Deletion: REST + Socket.IO
 
-- Decision: When a message is deleted via REST, emit message:delete using socket.io to notify all connected chat participants
+- Decision: When a message is deleted via REST, emit `message:delete` or `conversation:delete` using socket.io to notify all connected chat participants
 - Reason: It helps in combining the reliability of REST and real time UI update features of socket.io
+
+### 17-04-2025 — Cascade Delete all Messages on Conversation deletion
+
+- Decision: Added pre hook to delete all messages related to the conversation ID being deleted
+- Reason: Maintains data integrity and removes any condition of unnecessary storage being taken
 
 ## Client (encra-client)
