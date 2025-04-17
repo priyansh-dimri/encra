@@ -15,13 +15,4 @@ router.get(
   messageController.getMessages
 );
 
-router.post(
-  "/send",
-  verifyAccessToken,
-  attachConversation("body"),
-  checkUserInConversation,
-  validateSendMessage,
-  messageController.sendMessage
-);
-
 module.exports = router;
