@@ -37,4 +37,14 @@
 - Decision: Add a hook to sort the participants
 - Reason: Improves query performance and avoid duplication of a chat
 
+### 17-04-2025 — Socket.io using JWT Access Token
+
+- Decision: All socket connections require a valid JWT token before establishing connection to the server
+- Reason: Only valid users can now connect with the server
+
+### 17-04-2025 — Rate Limiting in socket.io
+
+- Decision: Using `rate-limiter-flexible` module to at most allow 10 events per 5 seconds per user.
+- Reason: This prevents spamming by any user
+
 ## Client (encra-client)
