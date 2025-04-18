@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ChatRoom = require("./ChatRoom");
 
 const userSchema = new mongoose.Schema(
   {
@@ -34,6 +35,19 @@ const userSchema = new mongoose.Schema(
 userSchema.index(
   { username: 1 },
   { unique: true, collation: { locale: "en", strength: 2 } }
+);
+
+userSchema.pre(
+  "deleteOne",
+  { document: true, query: false },
+  async function (next) {
+    try {
+      await ChatRoom.deleteMany({ participants: this._id });
+      next();
+    } catch (err) {
+      next(err);
+    }
+  }
 );
 
 module.exports = mongoose.model("User", userSchema);

@@ -67,4 +67,9 @@
 - Decision: Encrypted AES keys are stored in the DBMS and only delivered when recipient accepts the chat invite
 - Reason: This avoids unnecessary decryption on client side, and improves user's control over unsolicited chats.
 
+### 18-04-2025 — Cascade Deletion on User Removal
+
+- Decision: When a user deletes his account, all the related conversations are cascade deleted alongwith all pending `ConversationKey`s and messages in all `Conversation`s are also deleted.
+- Reason: Ensures consistent clean up upon user account deletion. This also prevents any orphaned messages or conversation keys.
+
 ## Client (encra-client)
