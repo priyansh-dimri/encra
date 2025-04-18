@@ -1,5 +1,5 @@
 const logger = require("../utils/logger");
-const { removeOnlineUser } = require("./socket/onlineUsers");
+const { removeOnlineUser } = require("../utils/onlineUsers");
 
 module.exports = (socket) => {
   socket.on("disconnect", (reason) => {
