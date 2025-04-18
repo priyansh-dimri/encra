@@ -5,7 +5,7 @@ const joinRoom = require("./handlers/joinRoom");
 const sendMsg = require("./handlers/sendMessage");
 const onDisconnect = require("./handlers/disconnect");
 const rateLimiter = require("./middlewares/socketRateLimiter");
-const { addOnlineUser } = require("./socket/onlineUsers");
+const { addOnlineUser } = require("./utils/onlineUsers");
 
 let ioInstance = null;
 
