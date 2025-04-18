@@ -6,6 +6,7 @@ require("dotenv").config();
 const authRouter = require("./routes/authRoutes");
 const conversationRouter = require("./routes/conversationRoutes");
 const messageRouter = require("./routes/messageRoutes");
+const userRouter = require("./routes/userRoutes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(
 app.use("/auth", authRouter);
 app.use("/conversation", conversationRouter);
 app.use("/message", messageRouter);
+app.use("/user", userRouter);
 
 // Health Checking route
 app.get("/health", (req, res) => {

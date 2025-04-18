@@ -11,10 +11,19 @@ const {
 exports.register = async (req, res) => {
   const { username, email, password, pqPublicKey, name } = req.body;
   try {
-    const userExists = await User.findOne({ email });
-    if (userExists) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       logger.info(`Registration attempt with existing email: ${email}`);
       return res.status(400).json({ message: "User already exists" });
+    }
+
+    const usernameExists = await User.findOne({ username }).collation({
+      locale: "en",
+      strength: 2,
+    });
+    if (usernameExists) {
+      logger.info(`Registration attempt with existing username: ${username}`);
+      return res.status(400).json({ message: "Username already taken" });
     }
 
     const options = {

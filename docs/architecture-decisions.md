@@ -57,4 +57,9 @@
 - Decision: Added pre hook to delete all messages related to the conversation ID being deleted
 - Reason: Maintains data integrity and removes any condition of unnecessary storage being taken
 
+### 18-04-2025 — Exact matching username search for privacy
+
+- Decision: User search will result at most one result with case insensitive exact username match
+- Reason: Respects privacy of users and prevents username harvesting
+
 ## Client (encra-client)

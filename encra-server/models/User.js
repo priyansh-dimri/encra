@@ -5,7 +5,6 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
     },
     email: {
@@ -30,6 +29,11 @@ const userSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
+);
+
+userSchema.index(
+  { username: 1 },
+  { unique: true, collation: { locale: "en", strength: 2 } }
 );
 
 module.exports = mongoose.model("User", userSchema);
