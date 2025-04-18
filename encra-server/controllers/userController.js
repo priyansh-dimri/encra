@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const logger = require("../utils/logger");
+const argon2 = require("argon2");
 
 exports.getPublicKey = async (req, res) => {
   try {
@@ -49,6 +50,42 @@ exports.searchUserByUsername = async (req, res) => {
     res.status(200).json(user);
   } catch (error) {
     logger.error(`Error searching user by username - ${error}`);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { password } = req.body;
+
+    if (!password) {
+      return res
+        .status(400)
+        .json({ message: "Password is required for account deletion" });
+    }
+
+    logger.info(`User ${userId} is attempting to delete their account`);
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      logger.warn(`User ${userId} not found during deletion`);
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await argon2.verify(user.passwordHash, password);
+
+    if (!isPasswordValid) {
+      return res.status(403).json({ message: "Incorrect password" });
+    }
+
+    await User.findByIdAndDelete(userId);
+
+    logger.info(`User ${userId} has been deleted`);
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    logger.error(`Error deleting account for user ${userId} - ${error}`);
     res.status(500).json({ message: "Server Error" });
   }
 };
