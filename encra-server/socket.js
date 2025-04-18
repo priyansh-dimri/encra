@@ -5,6 +5,7 @@ const joinRoom = require("./handlers/joinRoom");
 const sendMsg = require("./handlers/sendMessage");
 const onDisconnect = require("./handlers/disconnect");
 const rateLimiter = require("./middlewares/socketRateLimiter");
+const { addOnlineUser } = require("./socket/onlineUsers");
 
 let ioInstance = null;
 
@@ -17,10 +18,12 @@ function initSocketServer(httpServer) {
   });
 
   io.use(auth);
-  io.use(rateLimiter); 
+  io.use(rateLimiter);
 
   io.on("connection", (socket) => {
     logger.info(`Socket connected: ${socket.id} (user ${socket.userId})`);
+
+    addOnlineUser(socket.userId, socket.id);
 
     joinRoom(socket);
     sendMsg(io, socket);

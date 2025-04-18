@@ -1,6 +1,8 @@
 const Conversation = require("../models/ChatRoom");
+const ConversationKey = require("../models/ConversationKey");
 const logger = require("../utils/logger");
 const { getIO } = require("../socket");
+const { getUserSockets } = require("../utils/onlineUsers");
 
 exports.getConversations = async (req, res) => {
   try {
@@ -24,7 +26,7 @@ exports.getConversations = async (req, res) => {
 
 exports.startConversation = async (req, res) => {
   try {
-    const { participantId } = req.body;
+    const { participantId, encryptedAESKey } = req.body;
 
     logger.info(
       `User ${req.userId} attempting to start conversation with ${participantId}`
@@ -40,12 +42,34 @@ exports.startConversation = async (req, res) => {
     });
 
     if (!conversation) {
+      if (!encryptedAESKey) {
+        return res.status(400).json({ message: "Missing encryptedAESKey" });
+      }
+
       logger.info(
         `No existing conversation. Creating new conversation between ${req.userId} and ${participantId}`
       );
       conversation = await Conversation.create({
         participants: [req.userId, participantId],
       });
+
+      // Store the encrypted AES 256 key in ConversationKey model
+      await ConversationKey.create({
+        conversationId: conversation._id,
+        recipientId: participantId,
+        encryptedKey: encryptedAESKey,
+      });
+
+      // Notify the recipient using the socket id
+      const recipientSockets = getUserSockets(participantId);
+      const io = getIO();
+
+      for (const socketId of recipientSockets) {
+        io.to(socketId).emit("conversation:invite", {
+          conversationId: conversation._id,
+          from: req.userId,
+        });
+      }
     } else {
       logger.info(
         `Existing conversation found between ${req.userId} and ${participantId}`

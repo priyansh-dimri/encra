@@ -62,4 +62,9 @@
 - Decision: User search will result at most one result with case insensitive exact username match
 - Reason: Respects privacy of users and prevents username harvesting
 
+### 18-04-2025 — Delayed Key delivery via invite
+
+- Decision: Encrypted AES keys are stored in the DBMS and only delivered when recipient accepts the chat invite
+- Reason: This avoids unnecessary decryption on client side, and improves user's control over unsolicited chats.
+
 ## Client (encra-client)
