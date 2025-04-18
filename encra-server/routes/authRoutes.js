@@ -1,6 +1,6 @@
 const express = require("express");
 const authController = require("../controllers/authController");
-const authLimiter = require("../middlewares/rateLimiter");
+const { authLimiter } = require("../middlewares/rateLimiter");
 const { validateRegister } = require("../middlewares/authMiddleware");
 const csrfProtection = require("../middlewares/csrfProtection");
 
