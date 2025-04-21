@@ -1,10 +1,20 @@
-// encra-client/src/App.jsx
-function App() {
+import React, { useState } from "react";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { lightTheme, darkTheme } from "./theme";
+import AppRouter from "../routes/AppRouter";
+
+export default function App() {
+  const [mode, setMode] = useState("dark");
+  const theme = mode === "light" ? lightTheme : darkTheme;
+
+  const toggleTheme = () => {
+    setMode((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div>
-      <h1>Encra Client</h1>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppRouter mode={mode} toggleTheme={toggleTheme} />
+    </ThemeProvider>
   );
 }
-
-export default App;
