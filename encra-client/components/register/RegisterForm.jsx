@@ -10,14 +10,16 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Implement login logic here
+    // TODO: Implement register logic
   };
 
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
@@ -41,13 +43,40 @@ const LoginForm = () => {
             textAlign: "center",
           }}
         >
-          Welcome{" "}
-          <Box component="span" sx={{ display: { xs: "block", sm: "inline" } }}>
-            Back to Encra
-          </Box>
+          Join Encra Today
         </Typography>
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <TextField
+            label="Username"
+            type="text"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
+          />
+
+          <TextField
+            label="Name (Optional)"
+            type="text"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
+          />
+
           <TextField
             label="Email"
             type="email"
@@ -101,7 +130,7 @@ const LoginForm = () => {
             size="large"
             sx={{ mt: 2, px: 4, py: 1.5, fontWeight: 600, borderRadius: 2 }}
           >
-            Login
+            Register
           </Button>
         </form>
       </Box>
@@ -109,4 +138,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;
