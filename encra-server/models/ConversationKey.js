@@ -12,6 +12,15 @@ const conversationKeySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    signature: {
+      type: String,
+      required: true,
+    },
     encryptedKey: {
       type: String,
       required: true,

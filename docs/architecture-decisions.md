@@ -72,4 +72,19 @@
 - Decision: When a user deletes his account, all the related conversations are cascade deleted alongwith all pending `ConversationKey`s and messages in all `Conversation`s are also deleted.
 - Reason: Ensures consistent clean up upon user account deletion. This also prevents any orphaned messages or conversation keys.
 
+### 22-04-2025 — Digital Signature for Authenticity
+
+- Decision: User model now stores `dilithiumPublicKey` and a `kyberPublicKeySignature` which is signed using Dilithium private key. The ConversationKey model now includes senderId and a signed version of encrypted AES key.
+- Reason: This adds authenticity and integrity checks. This protects against MITM attacks against Kyber public key and also verifies that the encrypted AES key is sent by the claimed sender
+
 ## Client (encra-client)
+
+### 22-04-2025 — Use of React Context for Sensitive Data
+
+- Decision: React Context is used to hold sensitive values like the access token, derived encryption key (from user password via Argon2), decrypted Kyber private key and decrypted Dilithium private key.
+- Reason: Context gets cleared on logout or reload and prevents sensitive data to be present in persistent storage, thus minimizing attack surface.
+
+### 22-04-2025 — Encrypted LocalStorage for Persistent Secrets
+
+- Decision: All persistent secrets like Kyber Private key, Dilithium Private key and all AES keys for chat rooms are stored in localStorage in **encrypted form**. Encryption is done via derived key which is stored in memory.
+- Reason: Prevents unencrypted sensitive data to be written on disk. Users are advised not to clear LocalStorage unless they have backed it up in encrypted state.

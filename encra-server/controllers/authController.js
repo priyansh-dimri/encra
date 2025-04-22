@@ -9,7 +9,15 @@ const {
 } = require("../utils/authUtils");
 
 exports.register = async (req, res) => {
-  const { username, email, password, pqPublicKey, name } = req.body;
+  const {
+    username,
+    email,
+    password,
+    kyberPublicKey,
+    dilithiumPublicKey,
+    kyberPublicKeySignature,
+    name,
+  } = req.body;
   try {
     const emailExists = await User.findOne({ email });
     if (emailExists) {
@@ -36,7 +44,9 @@ exports.register = async (req, res) => {
       username,
       email,
       passwordHash: hashedPassword,
-      pqPublicKey,
+      kyberPublicKey,
+      dilithiumPublicKey,
+      kyberPublicKeySignature,
       name: name || "",
     });
 

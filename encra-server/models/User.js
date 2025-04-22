@@ -19,8 +19,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    pqPublicKey: {
-      // Post Quantum Public Key
+    kyberPublicKey: {
+      type: String,
+      required: true,
+    },
+    dilithiumPublicKey: {
+      type: String,
+      required: true,
+    },
+    kyberPublicKeySignature: {
       type: String,
       required: true,
     },
