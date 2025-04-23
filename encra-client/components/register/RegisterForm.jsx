@@ -7,8 +7,11 @@ import {
   Container,
   IconButton,
   InputAdornment,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { useAuthActions } from "../../api/auth";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -16,10 +19,23 @@ const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const { register } = useAuthActions();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Implement register logic
+    setError("");
+    setLoading(true);
+
+    try {
+      await register(username, email, password, name);
+    } catch (err) {
+      setError(err.message || "Registration failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClickShowPassword = () => setShowPassword((prev) => !prev);
@@ -45,6 +61,12 @@ const RegisterForm = () => {
         >
           Join Encra Today
         </Typography>
+
+        {error && (
+          <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
+            {error}
+          </Alert>
+        )}
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField
@@ -129,8 +151,9 @@ const RegisterForm = () => {
             type="submit"
             size="large"
             sx={{ mt: 2, px: 4, py: 1.5, fontWeight: 600, borderRadius: 2 }}
+            disabled={loading}
           >
-            Register
+            {loading ? <CircularProgress size={24} /> : "Register"}
           </Button>
         </form>
       </Box>

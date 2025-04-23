@@ -10,9 +10,15 @@ const AppRouter = ({ mode, toggleTheme }) => (
       path="/"
       element={<LandingPage mode={mode} toggleTheme={toggleTheme} />}
     />
-    <Route path="/login" element={<LoginPage />} />
-    <Route path="/register" element={<RegisterPage />} />
-    {/* <Route path="/chat" element={<ChatPage />} /> */}
+    <Route
+      path="/login"
+      element={<LoginPage mode={mode} toggleTheme={toggleTheme} />}
+    />
+    <Route
+      path="/register"
+      element={<RegisterPage mode={mode} toggleTheme={toggleTheme} />}
+    />
+    {/* <Route path="/chat" element={<ChatPage mode={mode} toggleTheme={toggleTheme} />} /> */}
   </Routes>
 );
 

@@ -1,7 +1,7 @@
 import Header from "../components/layout/Header";
 import LoginForm from "../components/login/LoginForm";
 
-const LandingPage = ({ mode, toggleTheme }) => {
+const LoginPage = ({ mode, toggleTheme }) => {
   return (
     <>
       <Header mode={mode} toggleTheme={toggleTheme} />
@@ -12,4 +12,4 @@ const LandingPage = ({ mode, toggleTheme }) => {
   );
 };
 
-export default LandingPage;
+export default LoginPage;

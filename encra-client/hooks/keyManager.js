@@ -1,20 +1,11 @@
-import { useAuth } from "../context/AuthContext";
-import argon2 from "argon2-browser";
+import { useAuth } from "../context/useAuth";
 import { decryptData } from "../utils/encryption";
 
 export const useKeyManager = () => {
-  const { setDecryptedData, authData } = useAuth();
+  const { setDecryptedData } = useAuth();
 
-  const deriveKeyFromPasswordAndStoreInMemory = async (password) => {
+  const storeDerivedKeyInMemory = async (derivedKey) => {
     try {
-      const derivedKey = await argon2.hash({
-        pass: password,
-        timeCost: 3,
-        memoryCost: 2 ** 16,
-        parallelism: 1,
-        hashLength: 32,
-      });
-
       setDecryptedData(derivedKey, null, null, null);
 
       console.log("Key derived and stored in memory");
@@ -33,10 +24,8 @@ export const useKeyManager = () => {
     }
   };
 
-  const decryptLocalStorage = async () => {
+  const decryptLocalStorage = async (derivedKey) => {
     try {
-      const { derivedKey } = authData;
-
       if (!derivedKey) {
         throw new Error("No derived key found in memory.");
       }
@@ -83,7 +72,7 @@ export const useKeyManager = () => {
   };
 
   return {
-    deriveKeyFromPasswordAndStoreInMemory,
+    storeDerivedKeyInMemory,
     storePrivateKeysInMemory,
     decryptLocalStorage,
   };
