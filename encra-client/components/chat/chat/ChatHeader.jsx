@@ -17,7 +17,7 @@ const ChatHeader = ({ topBarHeight }) => {
       }}
     >
       <Box>
-        <Typography variant="subtitle1">
+        <Typography variant="subtitle1" sx={{fontWeight: "bold"}}>
           @username
         </Typography>
         <Typography
