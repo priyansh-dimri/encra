@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/chat/Sidebar";
 import ChatWindow from "../components/chat/ChatWindow";
-import { getConversations, getMessages } from "../api/chat/message";
+import { getConversations } from "../api/chat/conversation";
+import { getMessages } from "../api/chat/message";
 import { useAuth } from "../context/useAuth";
 import useChatSocket from "../hooks/useChatSocket";
 
