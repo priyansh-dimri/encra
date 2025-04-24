@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     kyberPrivateKey: null,
     dilithiumPrivateKey: null,
     aesKeys: [],
+    accessToken: null,
   });
 
   const setDecryptedData = (
@@ -27,8 +28,29 @@ export const AuthProvider = ({ children }) => {
     }));
   };
 
+  const setTokens = (accessToken, csrfToken) => {
+    setAuthData((prevData) => ({
+      ...prevData,
+      accessToken: accessToken ?? prevData.accessToken,
+      csrfToken: csrfToken ?? prevData.csrfToken,
+    }));
+  };
+
+  const clearAuthData = () => {
+    setAuthData({
+      derivedKey: null,
+      kyberPrivateKey: null,
+      dilithiumPrivateKey: null,
+      aesKeys: [],
+      accessToken: null,
+      csrfToken: null,
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ authData, setDecryptedData }}>
+    <AuthContext.Provider
+      value={{ authData, setDecryptedData, setTokens, clearAuthData }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -3,7 +3,14 @@ import SearchBar from "./sidebar/SearchBar";
 import RecentChats from "./sidebar/RecentChats";
 import { useTheme } from "@emotion/react";
 
-const Sidebar = ({ topbarHeight, mode, toggleTheme }) => {
+const Sidebar = ({
+  topbarHeight,
+  mode,
+  toggleTheme,
+  conversations,
+  setActiveConversation,
+  activeConversation,
+}) => {
   const theme = useTheme();
   // 1. Top section with "Encra" and theme toggler
   // 2. Search bar (only for starting new chats)

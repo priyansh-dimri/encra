@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useAuthActions } from "../../api/auth";
+import { useAuthActions } from "../../services/authService";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
