@@ -26,7 +26,8 @@ exports.getConversations = async (req, res) => {
 
 exports.startConversation = async (req, res) => {
   try {
-    const { participantId, encryptedAESKey } = req.body;
+    const { participantId, encryptedAESKey, signature } = req.body;
+    const userId = req.userId;
 
     logger.info(
       `User ${req.userId} attempting to start conversation with ${participantId}`
@@ -40,6 +41,8 @@ exports.startConversation = async (req, res) => {
     let conversation = await Conversation.findOne({
       participants: { $all: [req.userId, participantId] },
     });
+
+    let createdNewConvo = false;
 
     if (!conversation) {
       if (!encryptedAESKey) {
@@ -58,6 +61,8 @@ exports.startConversation = async (req, res) => {
         conversationId: conversation._id,
         recipientId: participantId,
         encryptedKey: encryptedAESKey,
+        senderId: userId,
+        signature: signature
       });
 
       // Notify the recipient using the socket id
@@ -70,13 +75,14 @@ exports.startConversation = async (req, res) => {
           from: req.userId,
         });
       }
+      createdNewConvo = true;
     } else {
       logger.info(
         `Existing conversation found between ${req.userId} and ${participantId}`
       );
     }
 
-    res.status(201).json(conversation);
+    res.status(201).json({ conversation, created: createdNewConvo });
   } catch (error) {
     logger.error(
       `Error starting conversation for userId: ${req.userId} - ${error}`

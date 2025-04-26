@@ -1,12 +1,15 @@
 import api from "../index";
 
 export const getMessages = async (
+  accessToken,
   conversationId,
   before = null,
-  limit = 20
 ) => {
-  const res = await api.get(`/messages/${conversationId}`, {
-    params: before ? { before, limit } : { limit },
+  const res = await api.get(`/message/${conversationId}`, {
+    params: before ? before : null,
+    headers: {
+      authorization: `Bearer ${accessToken}`,
+    },
   });
   return res.data;
 };

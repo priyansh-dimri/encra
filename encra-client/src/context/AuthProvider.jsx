@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
     aesKeys
   ) => {
     setAuthData((prevData) => ({
+      ...prevData,
       derivedKey: derivedKey !== null ? derivedKey : prevData.derivedKey,
       kyberPrivateKey:
         kyberPrivateKey !== null ? kyberPrivateKey : prevData.kyberPrivateKey,

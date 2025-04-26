@@ -8,7 +8,9 @@ exports.getPublicKey = async (req, res) => {
 
     logger.info(`Fetching public key for user ${userId}`);
 
-    const user = await User.findById(userId).select("pqPublicKey");
+    const user = await User.findById(userId).select(
+      "kyberPublicKey dilithiumPublicKey kyberPublicKeySignature"
+    );
 
     if (!user) {
       logger.warn(`User ${userId} not found while fetching public key`);
@@ -17,7 +19,7 @@ exports.getPublicKey = async (req, res) => {
 
     logger.info(`Public key fetched for user ${userId}`);
 
-    res.status(200).json({ pqPublicKey: user.pqPublicKey });
+    res.status(200).json(user);
   } catch (error) {
     logger.error(
       `Error fetching public key for user ${req.params.userId} - ${error}`
@@ -38,7 +40,7 @@ exports.searchUserByUsername = async (req, res) => {
 
     const user = await User.findOne({ username })
       .collation({ locale: "en", strength: 2 }) // case-insensitive exact match
-      .select("username _id");
+      .select("username name _id");
 
     if (!user) {
       logger.info(`No user found with username: "${username}"`);

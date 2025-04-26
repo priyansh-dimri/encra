@@ -26,8 +26,12 @@ const Sidebar = ({
       }}
     >
       <TopBar height={topbarHeight} mode={mode} toggleTheme={toggleTheme} />
-      <SearchBar />
-      <RecentChats />
+      <SearchBar setActiveConversation={setActiveConversation} />
+      <RecentChats
+        conversations={conversations}
+        setActiveConversation={setActiveConversation}
+        activeConversation={activeConversation}
+      />
     </div>
   );
 };

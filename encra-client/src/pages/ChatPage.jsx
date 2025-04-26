@@ -6,7 +6,6 @@ import WelcomeModal from "../components/chat/WelcomeModal";
 import { getConversations } from "../api/chat/conversation";
 import { getMessages } from "../api/chat/message";
 import { useAuth } from "../context/useAuth";
-// import initChatSocket from "../hooks/initChatSocket";
 import { initSocket } from "../sockets/socket";
 
 const TOP_BAR_HEIGHT = 64;
@@ -17,9 +16,6 @@ const ChatPage = ({ mode, toggleTheme }) => {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [showWelcome, setShowWelcome] = useState(false);
-
-  // const socketRef = useRef(null);
-
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -47,7 +43,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
     const fetchMessages = async () => {
       if (!activeConversation) return;
       try {
-        const res = await getMessages(activeConversation);
+        const res = await getMessages(token, activeConversation);
         setMessages(res.reverse());
       } catch (err) {
         console.error(err);
@@ -55,7 +51,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
     };
 
     fetchMessages();
-  }, [activeConversation]);
+  }, [token, activeConversation]);
 
   useEffect(() => {
     if (!token) return;

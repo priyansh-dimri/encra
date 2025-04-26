@@ -30,8 +30,8 @@ export const encryptKyberPrivateKeyWithDerivedKey = async (
 
 export const encapsulateSharedSecretWithPublicKey = (publicKey) => {
   try {
-    const { ciphertext, sharedSecret } = ml_kem1024.encapsulate(publicKey);
-    return { ciphertext, sharedSecret };
+    const { cipherText, sharedSecret } = ml_kem1024.encapsulate(publicKey);
+    return { cipherText, sharedSecret };
   } catch (error) {
     console.error("Error encrypting with Kyber public key:", error);
     return null;
