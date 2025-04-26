@@ -29,6 +29,9 @@ function initSocketServer(httpServer) {
     sendMsg(io, socket);
     onDisconnect(socket);
   });
+  io.on("connection_error", (err) => {
+    console.error("Socket connection error:", err.message);
+  });
 
   ioInstance = io;
   return io;

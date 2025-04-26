@@ -70,6 +70,8 @@ export const useAuthActions = () => {
       dilithiumPrivateKey
     );
 
+    console.log("DONE TILL HERE");
+
     const res = await registerRequest({
       username,
       email,
@@ -82,6 +84,7 @@ export const useAuthActions = () => {
 
     setDecryptedData(derivedKey, kyberPrivateKey, dilithiumPrivateKey, null);
     setTokens(res.data.accessToken, null);
+    console.log('Tokens added');
   };
 
   const logout = async () => {

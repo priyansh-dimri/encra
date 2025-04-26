@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuthActions } from "../../services/authService";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -24,6 +25,8 @@ const RegisterForm = () => {
 
   const { register } = useAuthActions();
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -31,6 +34,7 @@ const RegisterForm = () => {
 
     try {
       await register(username, email, password, name);
+      navigate("/chat", { state: { justRegistered: true } });
     } catch (err) {
       setError(err.message || "Registration failed");
     } finally {

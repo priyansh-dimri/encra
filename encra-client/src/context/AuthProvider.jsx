@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
+import { fetchCsrfToken } from "../api/auth";
 
 export const AuthProvider = ({ children }) => {
   const [authData, setAuthData] = useState({
@@ -8,6 +9,7 @@ export const AuthProvider = ({ children }) => {
     dilithiumPrivateKey: null,
     aesKeys: [],
     accessToken: null,
+    csrfToken: null,
   });
 
   const setDecryptedData = (
@@ -46,6 +48,17 @@ export const AuthProvider = ({ children }) => {
       csrfToken: null,
     });
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await fetchCsrfToken();
+        setTokens(null, data.csrfToken);
+      } catch (err) {
+        console.error("CSRF Token fetch failed: ", err);
+      }
+    })();
+  }, []);
 
   return (
     <AuthContext.Provider

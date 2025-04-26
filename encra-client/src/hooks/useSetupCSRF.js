@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useAuth } from "../context/useAuth";
+import api from "../api";
 
 export const useSetupCSRF = () => {
   const { authData, setTokens } = useAuth();
@@ -9,7 +9,7 @@ export const useSetupCSRF = () => {
   useEffect(() => {
     const fetchCSRF = async () => {
       try {
-        const res = await axios.get("/auth/csrf-token", {
+        const res = await api.get("/auth/csrf-token", {
           withCredentials: true,
         });
         setTokens(null, res.data.csrfToken);

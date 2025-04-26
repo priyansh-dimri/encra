@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useAuthActions } from "../../services/authService.js";
+import { useAuthActions } from "../../services/authService";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");

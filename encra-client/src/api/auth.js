@@ -1,5 +1,8 @@
 import api from "../api";
 
+export const fetchCsrfToken = () =>
+  api.get("/auth/csrf-token", { withCredentials: true });
+
 export const loginRequest = (email, password) =>
   api.post("/auth/login", { email, password });
 
