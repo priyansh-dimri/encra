@@ -3,14 +3,48 @@ const ConversationKey = require("../models/ConversationKey");
 const logger = require("../utils/logger");
 const { getIO } = require("../socket");
 const { getUserSockets } = require("../utils/onlineUsers");
+const User = require("../models/User");
 
 exports.getConversations = async (req, res) => {
   try {
     logger.info(`Fetching conversations for userId: ${req.userId}`);
 
-    const conversations = await Conversation.find({ participants: req.userId })
-      .populate("participants", "username email")
-      .populate("latestMessage");
+    const conversations = await Conversation.aggregate([
+      {
+        $match: { participants: req.userId },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "participants",
+          foreignField: "_id",
+          as: "participantsInfo",
+        },
+      },
+      {
+        $unwind: {
+          path: "$participantsInfo",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $match: {
+          "participantsInfo._id": { $ne: req.userId },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          participants: 1,
+          latestMessage: 1,
+          otherUser: {
+            _id: "$participantsInfo._id",
+            username: "$participantsInfo.username",
+            name: "$participantsInfo.name",
+          },
+        },
+      },
+    ]).lean();
 
     logger.info(
       `Found ${conversations.length} conversations for userId: ${req.userId}`
@@ -44,6 +78,10 @@ exports.startConversation = async (req, res) => {
 
     let createdNewConvo = false;
 
+    const otherUser = await User.findById(participantId).select(
+      "username name"
+    );
+
     if (!conversation) {
       if (!encryptedAESKey) {
         return res.status(400).json({ message: "Missing encryptedAESKey" });
@@ -62,7 +100,7 @@ exports.startConversation = async (req, res) => {
         recipientId: participantId,
         encryptedKey: encryptedAESKey,
         senderId: userId,
-        signature: signature
+        signature: signature,
       });
 
       // Notify the recipient using the socket id
@@ -82,7 +120,13 @@ exports.startConversation = async (req, res) => {
       );
     }
 
-    res.status(201).json({ conversation, created: createdNewConvo });
+    res.status(201).json({
+      conversation: {
+        ...conversation,
+        otherUser,
+      },
+      created: createdNewConvo,
+    });
   } catch (error) {
     logger.error(
       `Error starting conversation for userId: ${req.userId} - ${error}`

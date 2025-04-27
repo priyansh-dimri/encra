@@ -8,6 +8,7 @@ const Sidebar = ({
   mode,
   toggleTheme,
   conversations,
+  setConversations,
   setActiveConversation,
   activeConversation,
 }) => {
@@ -26,7 +27,10 @@ const Sidebar = ({
       }}
     >
       <TopBar height={topbarHeight} mode={mode} toggleTheme={toggleTheme} />
-      <SearchBar setActiveConversation={setActiveConversation} />
+      <SearchBar
+        setConversations={setConversations}
+        setActiveConversation={setActiveConversation}
+      />
       <RecentChats
         conversations={conversations}
         setActiveConversation={setActiveConversation}

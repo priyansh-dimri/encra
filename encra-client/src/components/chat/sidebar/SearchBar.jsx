@@ -21,7 +21,7 @@ import { encryptData, hashSharedSecret } from "../../../utils/encryption.js";
 import { Buffer } from "buffer";
 import { signMessage, verifySignature } from "../../../utils/dilithium.js";
 
-const SearchBar = ({ setActiveConversation }) => {
+const SearchBar = ({ setConversations, setActiveConversation }) => {
   const { authData, setDecryptedData } = useAuth();
   const token = authData.accessToken;
   const csrfToken = authData.csrfToken;
@@ -100,7 +100,7 @@ const SearchBar = ({ setActiveConversation }) => {
         Buffer.from(signature).toString("base64")
       );
 
-      setActiveConversation(convoResponse.conversation._id);
+      setActiveConversation(convoResponse.conversation._doc._id);
 
       if (convoResponse.created) {
         const convoId = convoResponse.conversation._id;
@@ -124,6 +124,10 @@ const SearchBar = ({ setActiveConversation }) => {
         localStorage.setItem("aesKeys", encryptedAesKeys);
 
         setDecryptedData(null, null, null, updatedAesKeys);
+        setConversations((prevData) => [
+          convoResponse.conversation,
+          ...prevData,
+        ]);
       }
     } catch (err) {
       console.error("Failed to start conversation:", err);

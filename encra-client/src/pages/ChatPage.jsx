@@ -110,6 +110,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
           mode={mode}
           toggleTheme={toggleTheme}
           conversations={conversations}
+          setConversations={setConversations}
           setActiveConversation={setActiveConversation}
           activeConversation={activeConversation}
         />
