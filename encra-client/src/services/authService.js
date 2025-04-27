@@ -1,5 +1,5 @@
 import { useAuth } from "../context/useAuth";
-import { deriveKey, initializeSalt } from "../utils/encryption";
+import { deriveKey, initializeSalt, decryptData } from "../utils/encryption";
 import {
   generateKyberKeyPair,
   encryptKyberPrivateKeyWithDerivedKey,
@@ -10,7 +10,6 @@ import {
   signMessage,
 } from "../utils/dilithium";
 import { loginRequest, registerRequest, logoutRequest } from "../api/auth";
-import { decryptData } from "../utils/encryption";
 import { Buffer } from "buffer";
 
 export const useAuthActions = () => {

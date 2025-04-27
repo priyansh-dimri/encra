@@ -9,47 +9,36 @@ exports.getConversations = async (req, res) => {
   try {
     logger.info(`Fetching conversations for userId: ${req.userId}`);
 
-    const conversations = await Conversation.aggregate([
-      {
-        $match: { participants: req.userId },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "participants",
-          foreignField: "_id",
-          as: "participantsInfo",
-        },
-      },
-      {
-        $unwind: {
-          path: "$participantsInfo",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $match: {
-          "participantsInfo._id": { $ne: req.userId },
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          participants: 1,
-          latestMessage: 1,
+    const conversations = await Conversation.find({ participants: req.userId })
+      .populate("latestMessage")
+      .lean();
+
+    const populatedConversations = await Promise.all(
+      conversations.map(async (conversation) => {
+        const otherParticipantId = conversation.participants.find(
+          (id) => id.toString() !== req.userId
+        );
+
+        const otherUser = await User.findById(otherParticipantId)
+          .select("username name")
+          .lean();
+
+        // Inject otherUser inside conversation
+        return {
+          ...conversation,
           otherUser: {
-            _id: "$participantsInfo._id",
-            username: "$participantsInfo.username",
-            name: "$participantsInfo.name",
+            _id: otherUser._id,
+            username: otherUser.username,
+            name: otherUser.name,
           },
-        },
-      },
-    ]).lean();
+        };
+      })
+    );
 
     logger.info(
       `Found ${conversations.length} conversations for userId: ${req.userId}`
     );
-    res.status(200).json(conversations);
+    res.status(200).json(populatedConversations);
   } catch (error) {
     logger.error(
       `Error fetching conversations for userId: ${req.userId} - ${error}`
@@ -78,9 +67,9 @@ exports.startConversation = async (req, res) => {
 
     let createdNewConvo = false;
 
-    const otherUser = await User.findById(participantId).select(
-      "username name"
-    );
+    const otherUser = await User.findById(participantId)
+      .select("username name")
+      .lean();
 
     if (!conversation) {
       if (!encryptedAESKey) {
@@ -120,11 +109,11 @@ exports.startConversation = async (req, res) => {
       );
     }
 
+    const convo = conversation.toObject();
+
     res.status(201).json({
-      conversation: {
-        ...conversation,
-        otherUser,
-      },
+      ...convo,
+      otherUser,
       created: createdNewConvo,
     });
   } catch (error) {

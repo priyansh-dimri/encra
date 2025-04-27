@@ -7,18 +7,23 @@ export function initializeSalt() {
 
 export async function deriveKey(password) {
   const raw = localStorage.getItem("encraSalt");
-  if (!raw) throw new Error("No salt in localStorage – call initializeSalt()");
+  if (!raw) throw new Error("No salt in localStorage - call initializeSalt()");
   const salt = new Uint8Array(JSON.parse(raw));
 
   const { hash: rawBytes } = await argon2.hash({
     pass: password,
     salt,
-    timeCost: 3,
-    memoryCost: 2 ** 16,
+    time: 3,
+    mem: 2 ** 16,
     parallelism: 1,
-    hashLength: 32,
-    raw: true,
+    hashLen: 32,
+    type: argon2.ArgonType.Argon2id,
   });
+  if (rawBytes.byteLength !== 32) {
+    throw new Error(
+      `Expected a 256-bit key but got ${rawBytes.byteLength * 8} bits`
+    );
+  }
 
   return crypto.subtle.importKey("raw", rawBytes, { name: "AES-GCM" }, false, [
     "encrypt",

@@ -20,12 +20,12 @@ const RecentChats = ({
       }}
     >
       {conversations.map((chat) => {
-        const isActive = activeConversation === chat._doc._id;
+        const isActive = activeConversation === chat?._id;
 
         return (
           <Box
-            key={chat._doc._id}
-            onClick={() => setActiveConversation(chat._doc._id)}
+            key={chat._id}
+            onClick={() => setActiveConversation(chat?._id)}
             sx={{
               display: "flex",
               justifyContent: "space-between",

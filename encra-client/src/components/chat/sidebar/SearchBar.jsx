@@ -100,10 +100,10 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
         Buffer.from(signature).toString("base64")
       );
 
-      setActiveConversation(convoResponse.conversation._doc._id);
+      setActiveConversation(convoResponse._id);
 
       if (convoResponse.created) {
-        const convoId = convoResponse.conversation._id;
+        const convoId = convoResponse._id;
         const hashedSharedSecret = await hashSharedSecret(sharedSecret);
         const derivedKey = authData.derivedKey;
 
@@ -125,7 +125,7 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
 
         setDecryptedData(null, null, null, updatedAesKeys);
         setConversations((prevData) => [
-          convoResponse.conversation,
+          convoResponse,
           ...prevData,
         ]);
       }
