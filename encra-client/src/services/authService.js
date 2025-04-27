@@ -19,7 +19,7 @@ export const useAuthActions = () => {
     const res = await loginRequest(email, password);
     const derivedKey = await deriveKey(password);
 
-    const encryptedAESKeys = localStorage.getItem("encryptedAESKeys");
+    const encryptedAESKeys = localStorage.getItem("aesKeys");
     const encryptedKyberPrivateKey = localStorage.getItem("kyberPrivateKey");
     const encryptedDilithiumPrivateKey = localStorage.getItem(
       "dilithiumPrivateKey"
@@ -83,7 +83,7 @@ export const useAuthActions = () => {
 
     setDecryptedData(derivedKey, kyberPrivateKey, dilithiumPrivateKey, null);
     setTokens(res.data.accessToken, null);
-    console.log('Tokens added');
+    console.log("Tokens added");
   };
 
   const logout = async () => {

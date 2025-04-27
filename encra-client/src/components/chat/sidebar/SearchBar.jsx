@@ -88,6 +88,8 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
       const { cipherText, sharedSecret } =
         encapsulateSharedSecretWithPublicKey(kyberPublicKey);
 
+      console.log(sharedSecret);
+
       const dilithiumPrivateKey = authData.dilithiumPrivateKey;
 
       const signature = signMessage(cipherText, dilithiumPrivateKey);
@@ -97,7 +99,7 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
         Buffer.from(cipherText).toString("base64"),
         token,
         csrfToken,
-        Buffer.from(signature).toString("base64")
+        signature
       );
 
       setActiveConversation(convoResponse._id);
@@ -105,6 +107,7 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
       if (convoResponse.created) {
         const convoId = convoResponse._id;
         const hashedSharedSecret = await hashSharedSecret(sharedSecret);
+        console.log(hashedSharedSecret);
         const derivedKey = authData.derivedKey;
 
         if (!derivedKey) {
@@ -124,10 +127,7 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
         localStorage.setItem("aesKeys", encryptedAesKeys);
 
         setDecryptedData(null, null, null, updatedAesKeys);
-        setConversations((prevData) => [
-          convoResponse,
-          ...prevData,
-        ]);
+        setConversations((prevData) => [convoResponse, ...prevData]);
       }
     } catch (err) {
       console.error("Failed to start conversation:", err);

@@ -20,8 +20,8 @@ const ChatWindow = ({
       }}
     >
       <ChatHeader topBarHeight={topBarHeight} />
-      <MessagesArea />
-      <MessageInput />
+      <MessagesArea messages={messages} activeConversation={activeConversation} />
+      <MessageInput setMessages={setMessages} />
     </div>
   );
 };

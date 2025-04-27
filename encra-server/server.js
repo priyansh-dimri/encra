@@ -7,6 +7,7 @@ const authRouter = require("./routes/authRoutes");
 const conversationRouter = require("./routes/conversationRoutes");
 const messageRouter = require("./routes/messageRoutes");
 const userRouter = require("./routes/userRoutes");
+const keyRouter = require("./routes/keyRoutes");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/auth", authRouter);
 app.use("/conversation", conversationRouter);
 app.use("/message", messageRouter);
 app.use("/user", userRouter);
+app.use("/key", keyRouter);
 
 // Health Checking route
 app.get("/health", (req, res) => {
