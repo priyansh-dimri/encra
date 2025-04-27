@@ -39,6 +39,23 @@ export async function hashSharedSecret(sharedSecret) {
     .join("");
 }
 
+export async function generateAesKeyFromHash(hashedSecret) {
+  const bytes = new Uint8Array(hashedSecret.length / 2);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = parseInt(hashedSecret.substr(i * 2, 2), 16);
+  }
+
+  const aesKey = await crypto.subtle.importKey(
+    "raw",
+    bytes,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"]
+  );
+
+  return aesKey;
+}
+
 export async function encryptData(data, aesKey) {
   const payload =
     data instanceof Uint8Array

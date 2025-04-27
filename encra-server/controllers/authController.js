@@ -73,7 +73,7 @@ exports.register = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(201)
-      .json({ accessToken });
+      .json({ accessToken, userId: newUser._id });
   } catch (error) {
     logger.error(`Registration error: ${error}`);
     res.status(500).json({ message: "Server Error" });
@@ -118,7 +118,7 @@ exports.login = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
       .status(200)
-      .json({ accessToken });
+      .json({ accessToken, userId: user._id });
   } catch (error) {
     logger.error(`Login error: ${error}`);
     res.status(500).json({ message: "Server Error" });

@@ -7,14 +7,15 @@ import { getPublicKeyByUserId } from "../../../api/chat/user";
 import { verifySignature } from "../../../utils/dilithium";
 import { decapsulateSharedSecret } from "../../../utils/kyber";
 import { encryptData, hashSharedSecret } from "../../../utils/encryption";
+import DecryptedMessage from "./DecryptedMessage";
 
-const MessagesArea = ({ messages, activeConversation }) => {
+const MessagesArea = ({ messages, activeConversation, aesKey }) => {
   // Scrollable container for chat messages
   // Only supports text messages for now
   const theme = useTheme();
   const { authData, setDecryptedData } = useAuth();
-  const { accessToken, csrfToken, aesKeys, kyberPrivateKey } = authData;
-  console.log(aesKeys);
+  const myUserId = authData.myUserId;
+  const { accessToken, csrfToken, kyberPrivateKey } = authData;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,9 +45,6 @@ const MessagesArea = ({ messages, activeConversation }) => {
       </Box>
     );
   }
-
-  const keyEntry = aesKeys.find((e) => e.conversationId === activeConversation);
-  const aesKey = keyEntry?.aesKey;
 
   const handleFetchKey = async () => {
     setLoading(true);
@@ -168,7 +166,14 @@ const MessagesArea = ({ messages, activeConversation }) => {
 
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "1rem" }}>
-      {/* TODO: decrypt each message with aesKey and render them, left/right */}
+      {messages.map((msg) => (
+        <DecryptedMessage
+          key={msg._id}
+          message={msg}
+          aesKey={aesKey}
+          isOwnMessage={msg.sender === myUserId}
+        />
+      ))}
     </div>
   );
 };

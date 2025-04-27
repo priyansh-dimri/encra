@@ -1,15 +1,28 @@
 import React, { useState } from "react";
 import { TextField, InputAdornment, IconButton, useTheme } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { encryptData } from "../../../utils/encryption";
 
-const MessageInput = () => {
+const MessageInput = ({ activeConversation, socket, aesKey }) => {
   const theme = useTheme();
   const [message, setMessage] = useState("");
 
-  const handleSend = () => {
-    if (message.trim()) {
-      console.log("Sending message:", message);
+  const handleSend = async () => {
+    const text = message.trim();
+    if (!socket || !activeConversation || !text) return;
+
+    try {
+      const encrypted = await encryptData(text, aesKey);
+
+      socket.emit("message:send", {
+        conversationId: activeConversation,
+        content: encrypted,
+        messageType: "text",
+      });
+
       setMessage("");
+    } catch (err) {
+      console.error("Encryption failed, message not sent:", err);
     }
   };
 

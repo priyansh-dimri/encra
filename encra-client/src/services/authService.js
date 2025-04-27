@@ -13,7 +13,7 @@ import { loginRequest, registerRequest, logoutRequest } from "../api/auth";
 import { Buffer } from "buffer";
 
 export const useAuthActions = () => {
-  const { setDecryptedData, setTokens, clearAuthData } = useAuth();
+  const { setDecryptedData, setTokens, clearAuthData, setMyUserId } = useAuth();
 
   const login = async (email, password) => {
     const res = await loginRequest(email, password);
@@ -47,6 +47,7 @@ export const useAuthActions = () => {
     );
 
     setTokens(res.data.accessToken, null);
+    setMyUserId(res.data.userId);
   };
 
   const register = async (username, email, password, name) => {

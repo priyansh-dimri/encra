@@ -16,6 +16,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [showWelcome, setShowWelcome] = useState(false);
+  const [socket, setSocket] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -56,6 +57,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
   useEffect(() => {
     if (!token) return;
     const sock = initSocket(token);
+    setSocket(sock);
 
     sock.onAny((e, ...args) => {
       console.log("socket event:", e, args);
@@ -74,18 +76,13 @@ const ChatPage = ({ mode, toggleTheme }) => {
     };
     if (activeConversation) rejoin(activeConversation);
 
-    sock.on("message:receive", (msg) => {
-      console.log("got message", msg);
-      if (msg.chat.toString() === activeConversation) {
-        setMessages((m) => [...m, msg]);
-      }
-    });
     sock.on("conversation:invite", () => fetchConversations(token));
 
     if (activeConversation) {
       sock.emit("joinRoom", activeConversation);
 
       sock.on("message:receive", (msg) => {
+        console.log("Message received: ", msg);
         if (msg.chat.toString() === activeConversation) {
           setMessages((m) => [...m, msg]);
         }
@@ -119,6 +116,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
           messages={messages}
           activeConversation={activeConversation}
           setMessages={setMessages}
+          socket={socket}
         />
       </div>
       <WelcomeModal show={showWelcome} onClose={() => setShowWelcome(false)} />

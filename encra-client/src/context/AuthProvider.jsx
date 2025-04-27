@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     aesKeys: [],
     accessToken: null,
     csrfToken: null,
+    myUserId: null,
   });
 
   const setDecryptedData = (
@@ -39,6 +40,13 @@ export const AuthProvider = ({ children }) => {
     }));
   };
 
+  const setMyUserId = (userId) => {
+    setAuthData((prevData) => ({
+      ...prevData,
+      myUserId: userId,
+    }));
+  };
+
   const clearAuthData = () => {
     setAuthData({
       derivedKey: null,
@@ -47,6 +55,7 @@ export const AuthProvider = ({ children }) => {
       aesKeys: [],
       accessToken: null,
       csrfToken: null,
+      myUserId: null,
     });
   };
 
@@ -63,7 +72,13 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ authData, setDecryptedData, setTokens, clearAuthData }}
+      value={{
+        authData,
+        setDecryptedData,
+        setTokens,
+        setMyUserId,
+        clearAuthData,
+      }}
     >
       {children}
     </AuthContext.Provider>
