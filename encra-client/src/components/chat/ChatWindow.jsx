@@ -4,11 +4,26 @@ import MessageInput from "./chat/MessageInput";
 import { useAuth } from "../../context/useAuth";
 import { useEffect, useState } from "react";
 import { generateAesKeyFromHash } from "../../utils/encryption";
+import { getMessages } from "../../api/chat/message";
 
-const ChatWindow = ({ topBarHeight, messages, activeConversation, socket }) => {
+const ChatWindow = ({
+  topBarHeight,
+  messages,
+  setMessages,
+  activeConversation,
+  socket,
+}) => {
   const { authData } = useAuth();
-  console.log(authData.aesKeys);
   const [aesKey, setAesKey] = useState();
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
+
+  useEffect(() => {
+    if (activeConversation) {
+      setHasMoreMessages(true);
+    }
+  }, [activeConversation]);
+
   useEffect(() => {
     const loadKey = async () => {
       const aesKeyEntry = authData.aesKeys.find(
@@ -26,9 +41,79 @@ const ChatWindow = ({ topBarHeight, messages, activeConversation, socket }) => {
       loadKey();
     }
   }, [activeConversation, authData.aesKeys]);
-  // 1. Header with recipient name + username + menu icon
-  // 2. Scrollable messages area
-  // 3. Bottom message input box with send button
+
+  useEffect(() => {
+    const loadInitialMessages = async () => {
+      if (!activeConversation) return;
+
+      try {
+        const res = await getMessages(authData.accessToken, activeConversation);
+
+        if (res.length > 0) {
+          res.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          setMessages(res);
+        } else {
+          setMessages([]);
+        }
+      } catch (error) {
+        console.error("Error loading initial messages:", error);
+      }
+    };
+
+    loadInitialMessages();
+  }, [activeConversation, authData.accessToken, setMessages]);
+
+  const handleScroll = async (container) => {
+    if (!container || !hasMoreMessages || fetchingMore) return;
+
+    if (container.scrollTop <= 20) {
+      console.log("HERE!");
+      await loadOlderMessages();
+    }
+  };
+
+  const loadOlderMessages = async () => {
+    if (!messages.length || !activeConversation) return;
+
+    try {
+      setFetchingMore(true);
+
+      const oldestMessage = messages[0];
+      const before = oldestMessage.createdAt;
+
+      const res = await getMessages(
+        authData.accessToken,
+        activeConversation,
+        before
+      );
+
+      if (res.length > 0) {
+        setMessages((prev) => {
+          const existingIds = new Set(prev.map((m) => m._id));
+          const filteredNewMessages = res.filter(
+            (msg) => !existingIds.has(msg._id)
+          );
+
+          if (filteredNewMessages.length > 0) {
+            const mergedMessages = [...filteredNewMessages, ...prev];
+            mergedMessages.sort(
+              (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+            );
+            return mergedMessages;
+          }
+
+          return prev;
+        });
+      } else {
+        setHasMoreMessages(false);
+      }
+    } catch (error) {
+      console.error("Error loading older messages:", error);
+    } finally {
+      setFetchingMore(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -40,8 +125,10 @@ const ChatWindow = ({ topBarHeight, messages, activeConversation, socket }) => {
       <ChatHeader topBarHeight={topBarHeight} />
       <MessagesArea
         messages={messages}
-        activeConversation={activeConversation}
         aesKey={aesKey}
+        myUserId={authData.myUserId}
+        onScroll={handleScroll}
+        fetchingMore={fetchingMore}
       />
       <MessageInput
         activeConversation={activeConversation}

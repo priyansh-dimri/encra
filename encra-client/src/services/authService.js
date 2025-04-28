@@ -84,6 +84,7 @@ export const useAuthActions = () => {
 
     setDecryptedData(derivedKey, kyberPrivateKey, dilithiumPrivateKey, null);
     setTokens(res.data.accessToken, null);
+    setMyUserId(res.data.userId);
     console.log("Tokens added");
   };
 

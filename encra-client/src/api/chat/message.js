@@ -3,10 +3,10 @@ import api from "../index";
 export const getMessages = async (
   accessToken,
   conversationId,
-  before = null,
+  before = null
 ) => {
   const res = await api.get(`/message/${conversationId}`, {
-    params: before ? before : null,
+    params: before ? { before } : {},
     headers: {
       authorization: `Bearer ${accessToken}`,
     },

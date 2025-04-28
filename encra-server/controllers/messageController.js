@@ -8,6 +8,8 @@ exports.getMessages = async (req, res) => {
     const query = { chat: conversationId };
     const limit = parseInt(req.query.limit, 10) || 20;
     const before = req.query.before;
+    console.log(before);
+    console.log(req.query);
 
     logger.info(
       `Fetching messages for conversationId: ${conversationId} with limit: ${limit}, before: ${
