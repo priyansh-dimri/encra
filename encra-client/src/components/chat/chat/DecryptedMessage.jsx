@@ -49,7 +49,7 @@ const DecryptedMessage = ({ message, aesKey, isOwnMessage }) => {
             ? theme.palette.primary.contrastText
             : theme.palette.text.primary,
           p: 1.25,
-          borderRadius: 4,
+          borderRadius: 3,
           wordBreak: "break-word",
         }}
       >

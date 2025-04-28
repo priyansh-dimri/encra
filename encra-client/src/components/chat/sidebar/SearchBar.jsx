@@ -153,7 +153,7 @@ const SearchBar = ({ setConversations, setActiveConversation }) => {
         sx={{
           "& .MuiOutlinedInput-root": {
             borderRadius: 3,
-            bgcolor: theme.palette.background.paper,
+            bgcolor: theme.palette.background.default,
           },
         }}
         slotProps={{

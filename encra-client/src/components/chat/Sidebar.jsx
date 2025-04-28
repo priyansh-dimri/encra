@@ -24,6 +24,7 @@ const Sidebar = ({
         display: "flex",
         flexDirection: "column",
         height: "100%",
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       <TopBar height={topbarHeight} mode={mode} toggleTheme={toggleTheme} />

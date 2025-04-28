@@ -13,9 +13,12 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ChatHeader = ({ topBarHeight }) => {
+const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+
+  const activeChat = conversations.find((c) => c._id === activeConversation);
+  const otherUser = activeChat?.otherUser;
 
   const handleToggle = () => setOpen((prev) => !prev);
   const handleClose = () => setOpen(false);
@@ -30,17 +33,18 @@ const ChatHeader = ({ topBarHeight }) => {
         alignItems: "center",
         px: 2,
         position: "relative",
+        bgcolor: theme.palette.background.paper,
       }}
     >
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-          @username
+          @{otherUser?.username || "—"}
         </Typography>
         <Typography
           variant="body2"
           sx={{ color: theme.palette.text.secondary }}
         >
-          Recipient Name
+          {otherUser?.name || ""}
         </Typography>
       </Box>
 
@@ -68,13 +72,13 @@ const ChatHeader = ({ topBarHeight }) => {
                   elevation={3}
                   sx={{ borderRadius: 3, overflow: "hidden" }}
                 >
-                  <MenuItem onClick={handleClose} sx={{ padding: 2 }}>
+                  <MenuItem onClick={handleClose} sx={{ p: 2 }}>
                     <InfoOutlinedIcon
                       sx={{ mr: 1, color: theme.palette.primary.main }}
                     />
                     Info
                   </MenuItem>
-                  <MenuItem onClick={handleClose} sx={{ padding: 2 }}>
+                  <MenuItem onClick={handleClose} sx={{ p: 2 }}>
                     <DeleteOutlineIcon
                       sx={{ mr: 1, color: theme.palette.secondary.main }}
                     />

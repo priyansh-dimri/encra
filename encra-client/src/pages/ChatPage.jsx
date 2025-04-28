@@ -117,6 +117,7 @@ const ChatPage = ({ mode, toggleTheme }) => {
           activeConversation={activeConversation}
           setMessages={setMessages}
           socket={socket}
+          conversations={conversations}
         />
       </div>
       <WelcomeModal show={showWelcome} onClose={() => setShowWelcome(false)} />

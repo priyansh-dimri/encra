@@ -12,6 +12,7 @@ const ChatWindow = ({
   setMessages,
   activeConversation,
   socket,
+  conversations,
 }) => {
   const { authData } = useAuth();
   const [aesKey, setAesKey] = useState();
@@ -122,7 +123,11 @@ const ChatWindow = ({
         flexDirection: "column",
       }}
     >
-      <ChatHeader topBarHeight={topBarHeight} />
+      <ChatHeader
+        topBarHeight={topBarHeight}
+        conversations={conversations}
+        activeConversation={activeConversation}
+      />
       <MessagesArea
         messages={messages}
         aesKey={aesKey}

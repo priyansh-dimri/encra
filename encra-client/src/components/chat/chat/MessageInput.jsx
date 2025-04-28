@@ -38,6 +38,7 @@ const MessageInput = ({ activeConversation, socket, aesKey }) => {
       style={{
         padding: "1rem",
         borderTop: `1px solid ${theme.palette.divider}`,
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       <TextField
@@ -51,7 +52,7 @@ const MessageInput = ({ activeConversation, socket, aesKey }) => {
         sx={{
           "& .MuiOutlinedInput-root": {
             borderRadius: 3,
-            bgcolor: theme.palette.background.paper,
+            bgcolor: theme.palette.background.default,
           },
         }}
         slotProps={{
