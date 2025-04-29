@@ -10,8 +10,9 @@ import { initSocket } from "../sockets/socket";
 
 const TOP_BAR_HEIGHT = 64;
 const ChatPage = ({ mode, toggleTheme }) => {
-  const { authData } = useAuth();
+  const { authData, setTokens, clearAuthData } = useAuth();
   const token = authData.accessToken;
+  const csrfToken = authData.csrfToken;
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -55,13 +56,14 @@ const ChatPage = ({ mode, toggleTheme }) => {
   }, [token, activeConversation]);
 
   useEffect(() => {
-    if (!token) return;
-    const sock = initSocket(token);
-    setSocket(sock);
+    const logout = () => {
+      clearAuthData();
 
-    sock.onAny((e, ...args) => {
-      console.log("socket event:", e, args);
-    });
+      navigate("/login", { replace: true });
+    };
+    if (!token) return;
+    const sock = initSocket(token, csrfToken, setTokens, logout);
+    setSocket(sock);
 
     sock.on("connect", () => {
       console.log("socket connected:", sock.id);
@@ -89,15 +91,11 @@ const ChatPage = ({ mode, toggleTheme }) => {
       });
     }
 
-    sock.on("connect_error", (err) => {
-      console.error("Socket connection error:", err.message);
-    });
-
     // cleanup
     return () => {
       sock.disconnect();
     };
-  }, [token, activeConversation]);
+  }, [token, activeConversation, csrfToken, setTokens, clearAuthData, navigate]);
 
   return (
     <>

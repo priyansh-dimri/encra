@@ -5,11 +5,17 @@ export const getMessages = async (
   conversationId,
   before = null
 ) => {
-  const res = await api.get(`/message/${conversationId}`, {
-    params: before ? { before } : {},
-    headers: {
-      authorization: `Bearer ${accessToken}`,
-    },
-  });
-  return res.data;
+  try {
+    const res = await api.get(`/message/${conversationId}`, {
+      params: before ? { before } : {},
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(res);
+    return res.data;
+  } catch (error) {
+    console.error("Error in getMessages:", error);
+    return null;
+  }
 };
