@@ -39,3 +39,20 @@ export const deleteMyAccount = async (accessToken, csrfToken, password) => {
     return false;
   }
 };
+
+export const getMe = async (accessToken) => {
+  try {
+    const res = await api.get("/user/me", {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return res.data;
+  } catch (error) {
+    console.error(
+      "Error fetching user profile:",
+      error?.response?.data || error.message
+    );
+    return null;
+  }
+};

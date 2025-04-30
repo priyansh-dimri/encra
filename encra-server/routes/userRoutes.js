@@ -6,6 +6,8 @@ const { authLimiter, fetchLimiter } = require("../middlewares/rateLimiter");
 
 const router = express.Router();
 
+router.get("/me", verifyAccessToken, fetchLimiter, userController.getMe);
+
 router.get(
   "/public-key/:userId",
   verifyAccessToken,
