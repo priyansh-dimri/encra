@@ -38,7 +38,7 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
     >
       <Box>
         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-          @{otherUser?.username || "—"}
+          {otherUser?.username ? `@${otherUser.username}` : ""}
         </Typography>
         <Typography
           variant="body2"
