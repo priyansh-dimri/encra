@@ -19,3 +19,27 @@ export const getMessages = async (
     return null;
   }
 };
+
+export const deleteMessage = async (
+  accessToken,
+  csrfToken,
+  messageId,
+  conversationId
+) => {
+  try {
+    const res = await api.delete(`/message/${messageId}`, {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+        "x-csrf-token": csrfToken,
+      },
+      data: {
+        conversationId,
+      },
+    });
+    console.log("Message deleted:", res.data);
+    return true;
+  } catch (error) {
+    console.error("Error in deleteMessage:", error);
+    return false;
+  }
+};

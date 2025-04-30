@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AccountModal from "./AccountModal";
+import ConversationDeleteModal from "./ConversationDeleteModal";
 import {
   Box,
   Typography,
@@ -10,21 +11,26 @@ import {
   ClickAwayListener,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
+const ChatHeader = ({
+  topBarHeight,
+  conversations,
+  activeConversation,
+  deleteConvoUsingId,
+}) => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const activeChat = conversations.find((c) => c._id === activeConversation);
   const otherUser = activeChat?.otherUser;
 
-  const handleToggle = () => setOpen((prev) => !prev);
-  const handleClose = () => setOpen(false);
+  const handleMenuToggle = () => setMenuOpen((prev) => !prev);
+  const handleMenuClose = () => setMenuOpen(false);
 
   return (
     <Box
@@ -52,13 +58,13 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
       </Box>
 
       <Box>
-        <IconButton onClick={handleToggle}>
+        <IconButton onClick={handleMenuToggle}>
           <MoreVertIcon />
         </IconButton>
 
         <AnimatePresence>
-          {open && (
-            <ClickAwayListener onClickAway={handleClose}>
+          {menuOpen && (
+            <ClickAwayListener onClickAway={handleMenuClose}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: -10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -76,30 +82,22 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
                   sx={{ borderRadius: 3, overflow: "hidden", p: 2 }}
                 >
                   {activeConversation && (
-                    <>
-                      <MenuItem
-                        onClick={handleClose}
-                        sx={{ p: 2, borderRadius: 3 }}
-                      >
-                        <InfoOutlinedIcon
-                          sx={{ mr: 1, color: theme.palette.primary.main }}
-                        />
-                        Info
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleClose}
-                        sx={{ p: 2, borderRadius: 3 }}
-                      >
-                        <DeleteOutlineIcon
-                          sx={{ mr: 1, color: theme.palette.secondary.main }}
-                        />
-                        Delete
-                      </MenuItem>
-                    </>
+                    <MenuItem
+                      onClick={() => {
+                        handleMenuClose();
+                        setDeleteModalOpen(true);
+                      }}
+                      sx={{ p: 2, borderRadius: 3 }}
+                    >
+                      <DeleteOutlineIcon
+                        sx={{ mr: 1, color: theme.palette.secondary.main }}
+                      />
+                      Delete
+                    </MenuItem>
                   )}
                   <MenuItem
                     onClick={() => {
-                      handleClose();
+                      handleMenuClose();
                       setAccountModalOpen(true);
                     }}
                     sx={{ p: 2, borderRadius: 3 }}
@@ -115,6 +113,17 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
           )}
         </AnimatePresence>
       </Box>
+
+      {/* Delete confirmation modal */}
+      <ConversationDeleteModal
+        open={deleteModalOpen}
+        onCancel={() => setDeleteModalOpen(false)}
+        onConfirm={() => {
+          setDeleteModalOpen(false);
+          deleteConvoUsingId(activeConversation);
+        }}
+      />
+
       <AnimatePresence>
         {accountModalOpen && (
           <AccountModal

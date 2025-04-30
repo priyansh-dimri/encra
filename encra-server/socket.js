@@ -6,6 +6,8 @@ const sendMsg = require("./handlers/sendMessage");
 const onDisconnect = require("./handlers/disconnect");
 const rateLimiter = require("./middlewares/socketRateLimiter");
 const { addOnlineUser } = require("./utils/onlineUsers");
+const deleteMessage = require("./handlers/deleteMessage");
+const deleteConversation = require("./handlers/deleteConversation");
 
 let ioInstance = null;
 
@@ -27,6 +29,8 @@ function initSocketServer(httpServer) {
 
     joinRoom(socket);
     sendMsg(io, socket);
+    deleteMessage(io, socket);
+    deleteConversation(io, socket);
     onDisconnect(socket);
   });
   io.on("connection_error", (err) => {

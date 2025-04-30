@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Box } from "@mui/material";
+import React, { useRef, useState, useEffect } from "react";
+import { Box, Modal, Button, Typography } from "@mui/material";
 import DecryptedMessage from "./DecryptedMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -9,8 +9,11 @@ const MessagesArea = ({
   myUserId,
   onScroll,
   fetchingMore,
+  deleteMessageUsingId,
 }) => {
   const containerRef = useRef(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -27,6 +30,24 @@ const MessagesArea = ({
       container.removeEventListener("scroll", handleScroll);
     };
   }, [onScroll]);
+
+  const handleMessageClick = (messageId) => {
+    setMessageToDelete(messageId);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (messageToDelete) {
+      await deleteMessageUsingId(messageToDelete);
+      setShowDeleteModal(false);
+      setMessageToDelete(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteModal(false);
+    setMessageToDelete(null);
+  };
 
   return (
     <Box
@@ -62,10 +83,48 @@ const MessagesArea = ({
           message={msg}
           aesKey={aesKey}
           isOwnMessage={msg.sender === myUserId}
+          onClick={() => handleMessageClick(msg._id)}
         />
       ))}
-      <div style={{ height: "1px" }} />{" "}
-      {/* Dummy div for proper bottom scroll */}
+
+      <Modal
+        open={showDeleteModal}
+        onClose={handleDeleteCancel}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            bgcolor: "background.paper",
+            p: 4,
+            borderRadius: 2,
+            minWidth: "300px",
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Are you sure you want to delete this message?
+          </Typography>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDeleteConfirm}
+            sx={{ marginRight: 2, borderRadius: 3 }}
+          >
+            Confirm
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleDeleteCancel}
+            sx={{ borderRadius: 3 }}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Modal>
     </Box>
   );
 };

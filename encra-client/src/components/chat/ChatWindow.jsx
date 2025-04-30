@@ -115,6 +115,23 @@ const ChatWindow = ({
     }
   };
 
+  const deleteMessageUsingId = (messageId) => {
+    if (!socket || !activeConversation) return;
+
+    socket.emit("message:delete", {
+      messageId,
+      conversationId: activeConversation,
+    });
+  };
+
+  const deleteConvoUsingId = () => {
+    if (!socket) return;
+
+    socket.emit("conversation:delete", {
+      conversationId: activeConversation,
+    });
+  };
+
   return (
     <div
       style={{
@@ -127,6 +144,7 @@ const ChatWindow = ({
         topBarHeight={topBarHeight}
         conversations={conversations}
         activeConversation={activeConversation}
+        deleteConvoUsingId={deleteConvoUsingId}
       />
       <MessagesArea
         messages={messages}
@@ -134,6 +152,7 @@ const ChatWindow = ({
         myUserId={authData.myUserId}
         onScroll={handleScroll}
         fetchingMore={fetchingMore}
+        deleteMessageUsingId={deleteMessageUsingId}
       />
       <MessageInput
         activeConversation={activeConversation}

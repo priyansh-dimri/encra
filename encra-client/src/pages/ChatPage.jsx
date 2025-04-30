@@ -81,21 +81,40 @@ const ChatPage = ({ mode, toggleTheme }) => {
     sock.on("conversation:invite", () => fetchConversations(token));
 
     if (activeConversation) {
-      sock.emit("joinRoom", activeConversation);
-
       sock.on("message:receive", (msg) => {
         console.log("Message received: ", msg);
         if (msg.chat.toString() === activeConversation) {
           setMessages((m) => [...m, msg]);
         }
       });
+
+      sock.on("message:delete", ({ messageId }) => {
+        console.log("Message deleted via socket:", messageId);
+        setMessages((prev) => prev.filter((m) => m._id !== messageId));
+      });
     }
+
+    sock.on("conversation:delete", ({ conversationId }) => {
+      console.log("Conversation deleted via socket:", conversationId);
+      setConversations((prev) => prev.filter((c) => c._id !== conversationId));
+      if (conversationId === activeConversation) {
+        setActiveConversation(null);
+        setMessages([]);
+      }
+    });
 
     // cleanup
     return () => {
       sock.disconnect();
     };
-  }, [token, activeConversation, csrfToken, setTokens, clearAuthData, navigate]);
+  }, [
+    token,
+    activeConversation,
+    csrfToken,
+    setTokens,
+    clearAuthData,
+    navigate,
+  ]);
 
   return (
     <>

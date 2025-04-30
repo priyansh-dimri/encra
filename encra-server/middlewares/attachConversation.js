@@ -1,4 +1,3 @@
-// middlewares/attachConversation.js
 const Conversation = require("../models/ChatRoom");
 
 module.exports = (source = "params") => {

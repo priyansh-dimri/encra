@@ -61,6 +61,14 @@ exports.deleteMessage = async (req, res) => {
       `Message ${messageId} deleted from conversation ${conversationId}`
     );
 
+    logger.info(`Emitting message:delete to room ${conversationId}`);
+    const socketsInRoom = await getIO().in(conversationId.toString()).fetchSockets();
+
+    logger.info(
+      `Emitting message:delete to room ${conversationId} with ${
+        socketsInRoom.length
+      } connected sockets: ${socketsInRoom.map((s) => s.id).join(", ")}`
+    );
     getIO().to(conversationId).emit("message:delete", { messageId });
 
     res.status(200).json({ message: "Message deleted successfully" });
