@@ -1,7 +1,7 @@
 import TopBar from "./sidebar/TopBar";
 import SearchBar from "./sidebar/SearchBar";
 import RecentChats from "./sidebar/RecentChats";
-import { useTheme } from "@emotion/react";
+import { Box, useTheme, useMediaQuery } from "@mui/material";
 
 const Sidebar = ({
   topbarHeight,
@@ -11,16 +11,16 @@ const Sidebar = ({
   setConversations,
   setActiveConversation,
   activeConversation,
+  setActiveView,
 }) => {
   const theme = useTheme();
-  // 1. Top section with "Encra" and theme toggler
-  // 2. Search bar (only for starting new chats)
-  // 3. List of recent conversations with unread indicators
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+
   return (
-    <div
-      style={{
-        width: "300px",
-        borderRight: `1px solid ${theme.palette.divider}`,
+    <Box
+      sx={{
+        width: { xs: "100%", md: 300 },
+        borderRight: isMdUp ? `1px solid ${theme.palette.divider}` : "none",
         display: "flex",
         flexDirection: "column",
         height: "100%",
@@ -30,14 +30,20 @@ const Sidebar = ({
       <TopBar height={topbarHeight} mode={mode} toggleTheme={toggleTheme} />
       <SearchBar
         setConversations={setConversations}
-        setActiveConversation={setActiveConversation}
+        setActiveConversation={(id) => {
+          setActiveConversation(id);
+          if (!isMdUp) setActiveView("chat");
+        }}
       />
       <RecentChats
         conversations={conversations}
-        setActiveConversation={setActiveConversation}
+        setActiveConversation={(id) => {
+          setActiveConversation(id);
+          if (!isMdUp) setActiveView("chat");
+        }}
         activeConversation={activeConversation}
       />
-    </div>
+    </Box>
   );
 };
 

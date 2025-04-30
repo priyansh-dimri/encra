@@ -7,17 +7,23 @@ import { getConversations } from "../api/chat/conversation";
 import { getMessages } from "../api/chat/message";
 import { useAuth } from "../context/useAuth";
 import { initSocket } from "../sockets/socket";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 const TOP_BAR_HEIGHT = 64;
 const ChatPage = ({ mode, toggleTheme }) => {
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const { authData, setTokens, clearAuthData } = useAuth();
   const token = authData.accessToken;
   const csrfToken = authData.csrfToken;
+
   const [conversations, setConversations] = useState([]);
   const [activeConversation, setActiveConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [showWelcome, setShowWelcome] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [activeView, setActiveView] = useState("sidebar");
+
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -118,24 +124,34 @@ const ChatPage = ({ mode, toggleTheme }) => {
 
   return (
     <>
-      <div style={{ display: "flex", height: "100vh" }}>
-        <Sidebar
-          topBarHeight={TOP_BAR_HEIGHT}
-          mode={mode}
-          toggleTheme={toggleTheme}
-          conversations={conversations}
-          setConversations={setConversations}
-          setActiveConversation={setActiveConversation}
-          activeConversation={activeConversation}
-        />
-        <ChatWindow
-          topBarHeight={TOP_BAR_HEIGHT}
-          messages={messages}
-          activeConversation={activeConversation}
-          setMessages={setMessages}
-          socket={socket}
-          conversations={conversations}
-        />
+      <div style={{ display: "flex", height: "100vh", width: "100vw" }}>
+        {(isMdUp || activeView === "sidebar") && (
+          <Sidebar
+            topBarHeight={TOP_BAR_HEIGHT}
+            mode={mode}
+            toggleTheme={toggleTheme}
+            conversations={conversations}
+            setConversations={setConversations}
+            setActiveConversation={(id) => {
+              setActiveConversation(id);
+              if (!isMdUp) setActiveView("chat");
+            }}
+            activeConversation={activeConversation}
+            setActiveView={setActiveView}
+          />
+        )}
+
+        {(isMdUp || activeView === "chat") && (
+          <ChatWindow
+            topBarHeight={TOP_BAR_HEIGHT}
+            messages={messages}
+            activeConversation={activeConversation}
+            setMessages={setMessages}
+            socket={socket}
+            conversations={conversations}
+            setActiveView={setActiveView}
+          />
+        )}
       </div>
       <WelcomeModal show={showWelcome} onClose={() => setShowWelcome(false)} />
     </>
