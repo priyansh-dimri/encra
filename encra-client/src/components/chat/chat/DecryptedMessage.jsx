@@ -15,8 +15,7 @@ const DecryptedMessage = ({ message, aesKey, isOwnMessage }) => {
       try {
         const decrypted = await decryptData(message.content, aesKey);
         setPlaintext(decrypted);
-      } catch (err) {
-        console.error("Failed to decrypt:", err);
+      } catch {
         setPlaintext("Decryption error");
       }
     };
