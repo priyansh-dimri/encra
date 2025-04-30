@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import AccountModal from "./AccountModal";
 import {
   Box,
   Typography,
@@ -11,11 +12,13 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [accountModalOpen, setAccountModalOpen] = useState(false);
 
   const activeChat = conversations.find((c) => c._id === activeConversation);
   const otherUser = activeChat?.otherUser;
@@ -70,19 +73,41 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
               >
                 <Paper
                   elevation={3}
-                  sx={{ borderRadius: 3, overflow: "hidden" }}
+                  sx={{ borderRadius: 3, overflow: "hidden", p: 2 }}
                 >
-                  <MenuItem onClick={handleClose} sx={{ p: 2 }}>
-                    <InfoOutlinedIcon
+                  {activeConversation && (
+                    <>
+                      <MenuItem
+                        onClick={handleClose}
+                        sx={{ p: 2, borderRadius: 3 }}
+                      >
+                        <InfoOutlinedIcon
+                          sx={{ mr: 1, color: theme.palette.primary.main }}
+                        />
+                        Info
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleClose}
+                        sx={{ p: 2, borderRadius: 3 }}
+                      >
+                        <DeleteOutlineIcon
+                          sx={{ mr: 1, color: theme.palette.secondary.main }}
+                        />
+                        Delete
+                      </MenuItem>
+                    </>
+                  )}
+                  <MenuItem
+                    onClick={() => {
+                      handleClose();
+                      setAccountModalOpen(true);
+                    }}
+                    sx={{ p: 2, borderRadius: 3 }}
+                  >
+                    <ManageAccountsOutlinedIcon
                       sx={{ mr: 1, color: theme.palette.primary.main }}
                     />
-                    Info
-                  </MenuItem>
-                  <MenuItem onClick={handleClose} sx={{ p: 2 }}>
-                    <DeleteOutlineIcon
-                      sx={{ mr: 1, color: theme.palette.secondary.main }}
-                    />
-                    Delete
+                    Account
                   </MenuItem>
                 </Paper>
               </motion.div>
@@ -90,6 +115,14 @@ const ChatHeader = ({ topBarHeight, conversations, activeConversation }) => {
           )}
         </AnimatePresence>
       </Box>
+      <AnimatePresence>
+        {accountModalOpen && (
+          <AccountModal
+            onClose={() => setAccountModalOpen(false)}
+            user={otherUser}
+          />
+        )}
+      </AnimatePresence>
     </Box>
   );
 };
