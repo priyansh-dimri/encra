@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useAuthActions } from "../../services/authService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const RegisterForm = () => {
   const [email, setEmail] = useState("");
@@ -22,6 +22,17 @@ const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
+  const [deletionNotice, setDeletionNotice] = useState(false);
+
+  useEffect(() => {
+    if (location.state?.accountDeleted) {
+      setDeletionNotice(true);
+
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const { register } = useAuthActions();
 
@@ -46,6 +57,11 @@ const RegisterForm = () => {
 
   return (
     <Container maxWidth="sm">
+      {deletionNotice && (
+        <Alert severity="success" sx={{ width: "100%", mb: 2 }}>
+          Your account was successfully deleted.
+        </Alert>
+      )}
       <Box
         sx={{
           display: "flex",
