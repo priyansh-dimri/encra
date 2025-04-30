@@ -11,6 +11,7 @@ import {
   Tabs,
   Tab,
 } from "@mui/material";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { motion } from "framer-motion";
@@ -59,6 +60,26 @@ const AccountModal = ({ onClose }) => {
 
   const handleTabChange = (_, newValue) => {
     setCurrentTab(newValue);
+  };
+
+  const handleBackupExport = () => {
+    const backupData = {};
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      backupData[key] = localStorage.getItem(key);
+    }
+
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], {
+      type: "application/json",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "encra-backup.json";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -142,6 +163,21 @@ const AccountModal = ({ onClose }) => {
               <Box
                 sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}
               >
+                <Button
+                  variant="outlined"
+                  startIcon={<FileDownloadOutlinedIcon />}
+                  onClick={handleBackupExport}
+                  sx={{
+                    justifyContent: "flex-start",
+                    px: 2,
+                    borderRadius: 3,
+                    color: theme.palette.primary.main,
+                    borderColor: theme.palette.primary.main,
+                  }}
+                >
+                  Export Backup
+                </Button>
+
                 <Button
                   variant="outlined"
                   startIcon={<LogoutOutlinedIcon />}
