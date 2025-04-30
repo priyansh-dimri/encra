@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Modal, Button, Typography } from "@mui/material";
+import { Box, Modal, Button, Typography, useTheme, useMediaQuery } from "@mui/material";
 import DecryptedMessage from "./DecryptedMessage";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -11,6 +11,8 @@ const MessagesArea = ({
   fetchingMore,
   deleteMessageUsingId,
 }) => {
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
   const containerRef = useRef(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
@@ -58,6 +60,7 @@ const MessagesArea = ({
         p: 2,
         position: "relative",
         bgcolor: "background.default",
+        pb: isMdUp ? undefined : "calc(1rem + 56px)",
       }}
     >
       <AnimatePresence>
@@ -77,6 +80,7 @@ const MessagesArea = ({
           </motion.div>
         )}
       </AnimatePresence>
+
       {messages.map((msg) => (
         <DecryptedMessage
           key={msg._id}
