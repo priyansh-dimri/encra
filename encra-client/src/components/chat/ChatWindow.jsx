@@ -155,6 +155,7 @@ const ChatWindow = ({
         onScroll={handleScroll}
         fetchingMore={fetchingMore}
         deleteMessageUsingId={deleteMessageUsingId}
+        activeConversation={activeConversation}
       />
       <MessageInput
         activeConversation={activeConversation}
