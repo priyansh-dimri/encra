@@ -4,7 +4,7 @@ import RecentChats from "./sidebar/RecentChats";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
 
 const Sidebar = ({
-  topbarHeight,
+  topBarHeight,
   mode,
   toggleTheme,
   conversations,
@@ -27,7 +27,7 @@ const Sidebar = ({
         backgroundColor: theme.palette.background.paper,
       }}
     >
-      <TopBar height={topbarHeight} mode={mode} toggleTheme={toggleTheme} />
+      <TopBar height={topBarHeight} mode={mode} toggleTheme={toggleTheme} />
       <SearchBar
         setConversations={setConversations}
         setActiveConversation={(id) => {

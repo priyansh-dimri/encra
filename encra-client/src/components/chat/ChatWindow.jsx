@@ -13,6 +13,7 @@ const ChatWindow = ({
   activeConversation,
   socket,
   conversations,
+  setActiveView,
 }) => {
   const { authData } = useAuth();
   const [aesKey, setAesKey] = useState();
@@ -145,6 +146,7 @@ const ChatWindow = ({
         conversations={conversations}
         activeConversation={activeConversation}
         deleteConvoUsingId={deleteConvoUsingId}
+        setActiveView={setActiveView}
       />
       <MessagesArea
         messages={messages}

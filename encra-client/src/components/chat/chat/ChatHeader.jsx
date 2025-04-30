@@ -13,6 +13,7 @@ import {
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ChatHeader = ({
@@ -20,6 +21,7 @@ const ChatHeader = ({
   conversations,
   activeConversation,
   deleteConvoUsingId,
+  setActiveView,
 }) => {
   const theme = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -38,14 +40,26 @@ const ChatHeader = ({
         height: `${topBarHeight + 0.9}px`,
         borderBottom: `1px solid ${theme.palette.divider}`,
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: { xs: "center", md: "space-between" },
         alignItems: "center",
         px: 2,
         position: "relative",
         bgcolor: theme.palette.background.paper,
       }}
     >
-      <Box>
+      <IconButton
+        onClick={() => setActiveView("sidebar")}
+        sx={{
+          position: "absolute",
+          left: 8,
+          display: { xs: "block", md: "none" },
+          zIndex: 1,
+        }}
+      >
+        <ArrowBackIosNewIcon fontSize="small" />
+      </IconButton>
+
+      <Box sx={{ textAlign: { xs: "center", md: "left" } }}>
         <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
           {otherUser?.username ? `@${otherUser.username}` : ""}
         </Typography>
@@ -57,7 +71,14 @@ const ChatHeader = ({
         </Typography>
       </Box>
 
-      <Box>
+      <Box
+        sx={{
+          position: "absolute",
+          right: 8,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
         <IconButton onClick={handleMenuToggle}>
           <MoreVertIcon />
         </IconButton>
