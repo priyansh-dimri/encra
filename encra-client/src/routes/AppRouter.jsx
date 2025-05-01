@@ -3,6 +3,7 @@ import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ChatPage from "../pages/ChatPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 const AppRouter = ({ mode, toggleTheme }) => (
   <Routes>
@@ -22,6 +23,7 @@ const AppRouter = ({ mode, toggleTheme }) => (
       path="/chat"
       element={<ChatPage mode={mode} toggleTheme={toggleTheme} />}
     />
+    <Route path="*" element={<NotFoundPage />} />
   </Routes>
 );
 
