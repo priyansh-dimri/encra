@@ -33,7 +33,7 @@ const LoginForm = () => {
       await login(email, password);
       navigate("/chat");
     } catch (err) {
-      setError(err);
+      setError(err.response.data.message);
     } finally {
       setLoading(false);
     }

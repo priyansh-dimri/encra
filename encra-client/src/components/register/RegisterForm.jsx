@@ -20,7 +20,7 @@ const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
@@ -40,14 +40,15 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError([]);
     setLoading(true);
 
     try {
       await register(username, email, password, name);
       navigate("/chat", { state: { justRegistered: true } });
     } catch (err) {
-      setError(err.message || "Registration failed");
+      const errorList = err.response?.data?.errors || [];
+      setError(errorList.map((e) => e.msg || "An unknown error occurred"));
     } finally {
       setLoading(false);
     }
@@ -82,11 +83,11 @@ const RegisterForm = () => {
           Join Encra Today
         </Typography>
 
-        {error && (
-          <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
-            {error}
+        {error.map((msg, index) => (
+          <Alert key={index} severity="error" sx={{ width: "100%", mb: 1 }}>
+            {msg}
           </Alert>
-        )}
+        ))}
 
         <form onSubmit={handleSubmit} style={{ width: "100%" }}>
           <TextField
