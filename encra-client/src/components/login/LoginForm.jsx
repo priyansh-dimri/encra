@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthActions } from "../../services/authService";
 
 const LoginForm = () => {
@@ -23,6 +23,18 @@ const LoginForm = () => {
 
   const navigate = useNavigate();
   const { login } = useAuthActions();
+
+  const location = useLocation();
+
+  const [localMissingKey, setLocalMissingKey] = useState(
+    location.state?.missing || null
+  );
+
+  useEffect(() => {
+    if (location.state?.missing) {
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,6 +74,13 @@ const LoginForm = () => {
             Back to Encra
           </Box>
         </Typography>
+
+        {localMissingKey && (
+          <Alert severity="warning" sx={{ width: "100%", mb: 2 }}>
+            Session data missing: <strong>{localMissingKey}</strong>. Please log
+            in again.
+          </Alert>
+        )}
 
         {error && (
           <Alert severity="error" sx={{ width: "100%", mb: 2 }}>

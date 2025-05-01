@@ -28,6 +28,22 @@ const ChatPage = ({ mode, toggleTheme }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const requiredKeys = [
+      "dilithiumPrivateKey",
+      "kyberPrivateKey",
+      "encraSalt",
+    ];
+    const missingKey = requiredKeys.find((key) => !localStorage.getItem(key));
+
+    if (missingKey) {
+      navigate("/login", {
+        replace: true,
+        state: { missing: missingKey },
+      });
+    }
+  }, [navigate]);
+
+  useEffect(() => {
     if (location.state?.justRegistered) {
       setShowWelcome(true);
       navigate(location.pathname, { replace: true, state: {} });
