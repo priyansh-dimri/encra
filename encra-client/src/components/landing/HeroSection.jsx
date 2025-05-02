@@ -1,7 +1,10 @@
 import React from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -46,6 +49,7 @@ const HeroSection = () => {
             color="primary"
             size="large"
             sx={{ px: 4, py: 1.5, fontWeight: 600, borderRadius: 2 }}
+            onClick={() => navigate("/register")}
           >
             Try Encra now
           </Button>
