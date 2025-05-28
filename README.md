@@ -23,6 +23,14 @@
 
 ---
 
+## Demo
+
+Watch a quick demo of Encra in action:
+
+[![Encra Demo](./docs/encra.png)](https://youtu.be/VvuvK6gCZds)
+
+---
+
 ## **Tech Stack**
 
 - **Frontend:**
