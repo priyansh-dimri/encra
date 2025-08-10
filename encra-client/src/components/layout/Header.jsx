@@ -13,6 +13,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -63,6 +64,15 @@ const Header = ({ toggleTheme }) => {
 
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
+              component="a"
+              href="https://github.com/priyansh-dimri/encra"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: theme.palette.primary.main }}
+            >
+              <GitHubIcon />
+            </IconButton>
+            <IconButton
               onClick={toggleTheme}
               sx={{ color: theme.palette.primary.main }}
             >
@@ -82,6 +92,15 @@ const Header = ({ toggleTheme }) => {
             }}
           >
             <FullscreenButton />
+            <IconButton
+              component="a"
+              href="https://github.com/priyansh-dimri/encra"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ color: theme.palette.primary.main }}
+            >
+              <GitHubIcon />
+            </IconButton>
             <IconButton
               onClick={toggleTheme}
               sx={{ color: theme.palette.primary.main }}
