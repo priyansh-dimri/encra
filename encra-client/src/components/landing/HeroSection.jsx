@@ -43,15 +43,52 @@ const HeroSection = () => {
           you control.
         </Typography>
 
-        <Box sx={{ textAlign: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            mt: 3,
+          }}
+        >
           <Button
             variant="contained"
             color="primary"
             size="large"
-            sx={{ px: 4, py: 1.5, fontWeight: 600, borderRadius: 2 }}
+            fullWidth
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: 2,
+              maxWidth: 250,
+            }}
             onClick={() => navigate("/register")}
           >
             Try Encra now
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="large"
+            fullWidth
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: 2,
+              maxWidth: 250,
+            }}
+            onClick={() =>
+              window.open(
+                "https://www.youtube.com/watch?v=VvuvK6gCZds",
+                "_blank"
+              )
+            }
+          >
+            Watch Demo
           </Button>
         </Box>
       </Container>

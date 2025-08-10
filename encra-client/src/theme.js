@@ -14,7 +14,7 @@ export const lightTheme = createTheme({
       main: "#22d3ee", // cyan-500
     },
     secondary: {
-      main: "#fda4af", // rose-300
+      main: "#fb7185", // rose-400
     },
     background: {
       default: "#f8fafc", // slate-100
